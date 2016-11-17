@@ -1,0 +1,144 @@
+DROP DATABASE PlanZajec;
+CREATE DATABASE PlanZajec;
+USE PlanZajec;
+
+-- Tablica uzytkownikow Prowadzacy + Studenci
+CREATE TABLE Uzytkownicy(
+  id INTEGER NOT NULL, -- PRIMARY KEY
+  imie INTEGER NOT NULL,
+  nazwisko VARCHAR(20) NOT NULL,
+  haslo VARCHAR(20) NOT NULL
+);
+
+
+-- TABLICA PROWADZĄCYCH
+CREATE TABLE Prowadzacy(
+  id INTEGER NOT NULL, -- PRIMARY KEY FOREIGN KEY
+  tytul VARCHAR(20)
+);
+
+
+-- TABLICA STUDENTÓW
+CREATE TABLE Studenci(
+  id INTEGER NOT NULL, -- PRIMARY KEY FOREIGN KEY
+  kierunek VARCHAR(20) NOT NULL, -- FOREIGN KEY
+  semestr INTEGER NOT NULL, -- FOREIGN KEY
+  grupa INTEGER NOT NULL
+);
+
+
+-- TABLICA WYDZIAŁÓW
+CREATE TABLE Wydzialy(
+  nazwa VARCHAR(20) -- PRIMARY KEY
+);
+
+
+-- TABLICA KIERNUKÓW
+CREATE TABLE Kierunki(
+  nazwa VARCHAR(20) NOT NULL, -- PRIMARY KEY
+  nazwa_wydzialu VARCHAR(20) NOT NULL -- FOREIGN KEY
+);
+
+
+-- TABLICA SEMESTRÓW
+CREATE TABLE Semestry(
+  numer INTEGER NOT NULL -- PRIMARY KEY
+);
+
+
+-- TABLICA PRZEDMIOTÓW
+CREATE TABLE Przedmioty(
+  nazwa VARCHAR(20) NOT NULL, -- PRIMARY KEY
+  kierunek VARCHAR(20) NOT NULL -- FOREIGN KEY
+);
+
+-- TABLICA ZAJĘĆ
+CREATE TABLE Zajecia(
+  id INTEGER NOT NULL AUTO_INCREMENT, -- PRIMARY KEY
+  rocznik INTEGER NOT NULL,
+  dzien INTEGER NOT NULL,
+  godzina INTEGER NOT NULL,
+  tydzien INTEGER NOT NULL,
+  rodzaj VARCHAR(20) NOT NULL,
+  liczba_godzin INTEGER NOT NULL,
+  grupa INTEGER,
+  podgrupa INTEGER,
+
+  przedmiot VARCHAR(20) NOT NULL, -- FOREIGN KEY
+  id_prowadzacego INTEGER NOT NULL, -- FOREIGN KEY
+  sala INTEGER NOT NULL, -- FOREIGN KEY
+  budynek VARCHAR(20) NOT NULL -- FOREIGN KEY
+);
+
+
+-- TABLICA SAL
+CREATE TABLE Sale(
+  sala VARCHAR(20) NOT NULL, -- PRIMARY KEY
+  budynek VARCHAR(20) NOT NULL, -- PRIMARY KEY
+  liczba_miejsc INTEGER NOT NULL
+);
+
+
+-- TABLICA MIEJSC
+CREATE TABLE Miejsca(
+  numer INTEGER NOT NULL AUTO_INCREMENT, -- PRIMARY KEY potrzebny do weryfikacji miejsca. W rzeczywistości miejsca nie są ponumerowane
+  id_zajecia INTEGER NOT NULL, -- PRIMARY KEY FOREIGN KEY
+  student INTEGER  -- FOREIGN KEY
+);
+
+
+
+-- TABLICA ZAPLANOWANYCH ZAJĘĆ
+CREATE TABLE Zaplanowane_zajecia(
+  data DATE NOT NULL, -- PRIMARY KEY
+  id_zajecia INTEGER NOT NULL -- PRIMARY KEY FOREIGN KEY
+);
+
+
+-- TABLICA OBECNOSCI
+CREATE TABLE Obecnosci(
+  typ VARCHAR(20) NOT NULL,
+  student INTEGER NOT NULL, -- PRIMARY KEY FOREIGN KEY
+  data DATE NOT NULL, -- PRIMARY KEY FOREIGN KEY
+  id_zajecia INTEGER NOT NULL -- PRIMARY KEY FOREIGN KEY
+);
+
+ALTER TABLE Obecnosci ADD CONSTRAINT Obecnosci_data_FK FOREIGN KEY (data) REFERENCES Zaplanowane_zajecia (data)
+ALTER TABLE Obecnosci ADD CONSTRAINT Obecnosci_id_zajecia_FK FOREIGN KEY (id_zajecia) REFERENCES Zaplanowane_zajecia (id_zajecia)
+ALTER TABLE Obecnosci ADD CONSTRAINT Obecnosci_FK FOREIGN KEY (student) REFERENCES Studenci (id)
+ALTER TABLE Obecnosci ADD CONSTRAINT Obecnosci_PK PRIMARY KEY (student,data,id_zajecia);
+
+ALTER TABLE Uzytkownicy ADD CONSTRAINT Uzytkownicy_PK PRIMARY KEY (id);
+
+ALTER TABLE Prowadzacy ADD CONSTRAINT Prowadzacy_PK PRIMARY KEY (id);
+ALTER TABLE Prowadzacy ADD CONSTRAINT Prowadzacy_FK FOREIGN KEY (id) REFERENCES Uzytkownicy (id);
+
+ALTER TABLE Studenci ADD CONSTRAINT Studenci_id_FK FOREIGN KEY (id) REFERENCES Uzytkownicy (id);
+ALTER TABLE Studenci ADD CONSTRAINT Studenci_kierunek_FK FOREIGN KEY (kierunek) REFERENCES Kierunki (nazwa);
+ALTER TABLE Studenci ADD CONSTRAINT Studenci_semestr_FK FOREIGN KEY (semestr) REFERENCES Semestry (numer);
+ALTER TABLE Studenci ADD CONSTRAINT Studenci_PK PRIMARY KEY (id);
+
+ALTER TABLE Wydzialy ADD CONSTRAINT Wydzialy_PK PRIMARY KEY (nazwa);
+
+ALTER TABLE Kierunki ADD CONSTRAINT Kierunki_FK FOREIGN KEY (nazwa_wydzialu) REFERENCES Wydzialy (nazwa);
+ALTER TABLE Kierunki ADD CONSTRAINT Kierunki_PK PRIMARY KEY (nazwa, nazwa_wydzialu);
+
+ALTER TABLE Semestry ADD CONSTRAINT Semestry_PK PRIMARY KEY (numer);
+
+ALTER TABLE Przedmioty ADD CONSTRAINT Przedmioty_FK FOREIGN KEY (kierunek) REFERENCES Kierunki (nazwa);
+ALTER TABLE Przedmioty ADD CONSTRAINT Przedmioty_PK PRIMARY KEY (nazwa);
+
+ALTER TABLE Zajecia ADD CONSTRAINT Zajecia_przedmiot_FK FOREIGN KEY (przedmiot) REFERENCES Przedmioty (nazwa);
+ALTER TABLE Zajecia ADD CONSTRAINT Zajecia_id_prowadzacego_FK FOREIGN KEY (id_prowadzacego) REFERENCES Prowadzacy (id);
+ALTER TABLE Zajecia ADD CONSTRAINT Zajecia_sala_FK FOREIGN KEY (sala) REFERENCES Sale (sala);
+ALTER TABLE Zajecia ADD CONSTRAINT Zajecia_budynek_FK FOREIGN KEY (budynek) REFERENCES Sale (budynek);
+ALTER TABLE Zajecia ADD CONSTRAINT Zajecia_PK PRIMARY KEY (id);
+
+ALTER TABLE Sale ADD CONSTRAINT Sale_PK PRIMARY KEY (sala, budynek);
+
+ALTER TABLE Miejsca ADD CONSTRAINT Miejsca_id_zajecia_FK FOREIGN KEY (id_zajecia) REFERENCES Zajecia (id);
+ALTER TABLE Miejsca ADD CONSTRAINT Miejsca_student_FK FOREIGN KEY (student) REFERENCES Studenci (id);
+ALTER TABLE Miejsca ADD CONSTRAINT Miejsca_PK PRIMARY KEY (numer,id_zajecia);
+
+ALTER TABLE Zaplanowane_zajecia ADD CONSTRAINT Zaplanowane_zajecia_FK FOREIGN KEY (id_zajecia) REFERENCES Zajecia (id);
+ALTER TABLE Zaplanowane_zajecia ADD CONSTRAINT Zaplanowane_zajecia_PK PRIMARY KEY (data, id_zajecia);
