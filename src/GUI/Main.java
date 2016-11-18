@@ -1,6 +1,7 @@
 package GUI;
 
 import dataBase.MySql;
+import dataBase.generator.Generator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,8 +20,8 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
-        MySql baza = new MySql("admin","zxc");
+//        launch(args);
+        MySql baza = new MySql("admin","zxcv");
         baza.closeConnect();
     }
 }

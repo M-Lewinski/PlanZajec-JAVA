@@ -1,0 +1,16 @@
+USE PlanZajec;
+DELIMITER $$
+CREATE FUNCTION checkUser(login VARCHAR(30))
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+DECLARE result int;
+SELECT count(*) INTO result FROM mysql.user u
+WHERE u.User = login;
+IF result > 0 THEN
+RETURN (TRUE);
+ELSE
+RETURN (FALSE);
+END IF;
+END$$
+DELIMITER ;
