@@ -31,7 +31,7 @@ public class Semestr extends SqlObject {
   }
 
   @Override
-  public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator) {
+  public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator) throws SQLException {
 
   }
 }

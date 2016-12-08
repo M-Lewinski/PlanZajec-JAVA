@@ -15,7 +15,16 @@ public abstract class SqlObject {
     private String insertSQL;
 
     public abstract void addObjectToBase(PreparedStatement stmt) throws SQLException;
-    public abstract PreparedStatement addObjectToBase(Connection connection) throws SQLException;
+
+    public PreparedStatement addObjectToBase(Connection connection) throws SQLException {
+        try {
+            PreparedStatement stmt = connection.prepareStatement(this.getInsertSQL());
+            addObjectToBase(stmt);
+            return stmt;
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
 
     public String getInsertSQL() {
         return insertSQL;
@@ -25,5 +34,5 @@ public abstract class SqlObject {
         this.insertSQL = insertSQL;
     }
 
-    public abstract void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator);
+    public abstract void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator) throws SQLException;
 }

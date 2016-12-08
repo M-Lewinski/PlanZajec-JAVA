@@ -3,7 +3,6 @@ package dataBase.structure;
 import dataBase.SqlObject;
 import dataBase.generator.SqlClassGenerator;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,15 +10,15 @@ import java.util.List;
 
 public class Wydzial extends SqlObject {
     private String nazwa;
-    public Wydzial(){
-        String SQL = "INSERT INTO Wydzialy " +
-            "VALUES(?)";
-        this.setInsertSQL(SQL);
-    }
-    public Wydzial(String nazwa) {
+
+    public Wydzial() {
         String SQL = "INSERT INTO Wydzialy " +
                 "VALUES(?)";
         this.setInsertSQL(SQL);
+    }
+
+    public Wydzial(String nazwa) {
+        this();
         this.nazwa = nazwa;
     }
 
@@ -41,19 +40,13 @@ public class Wydzial extends SqlObject {
         }
     }
 
+
     @Override
-    public PreparedStatement addObjectToBase(Connection connection) throws SQLException {
+    public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator) throws SQLException {
         try {
-            PreparedStatement stmt = connection.prepareStatement(this.getInsertSQL());
-            addObjectToBase(stmt);
-            return stmt;
+            sqlClassGenerator.generate(this, data, stmt);
         } catch (SQLException e) {
             throw e;
         }
-    }
-
-    @Override
-    public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator) {
-        sqlClassGenerator.generate(this,data,stmt);
     }
 }

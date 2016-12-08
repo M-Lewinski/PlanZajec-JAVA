@@ -2,6 +2,8 @@ package GUI;
 
 import dataBase.MySql;
 import dataBase.generator.Generator;
+import dataBase.structure.Kierunek;
+import dataBase.structure.Wydzial;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,9 +31,10 @@ public class Main extends Application {
             return;
         }
         Generator generator = new Generator();
-        generator.createWydzialy();
+//        generator.createWydzialy();
 //        generator.createKierunki();
-
+//        generator.createSqlObjectsFromFiles(new Wydzial(),0,new String[]{"wydzialy.txt"});
+//        generator.createSqlObjectsFromFiles(new Kierunek(),0,new String[]{"kierunki.txt"});
         baza.closeConnect();
     }
 }
