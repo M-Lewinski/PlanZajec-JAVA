@@ -1,6 +1,11 @@
 package dataBase.actors;
 
-public class Uzytkownicy {
+import dataBase.SqlObject;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public abstract class Uzytkownik extends SqlObject {
   private String login;
   private String imie;
   private String nazwisko;
@@ -36,5 +41,10 @@ public class Uzytkownicy {
 
   public void setHaslo(String haslo) {
     this.haslo = haslo;
+  }
+
+  @Override
+  public void addObjectToBase(PreparedStatement stmt) throws SQLException {
+
   }
 }

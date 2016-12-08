@@ -1,6 +1,6 @@
 package dataBase.subjects;
 
-public class Przedmioty {
+public class Przedmiot {
   private String nazwa;
   private String kierunek;
 

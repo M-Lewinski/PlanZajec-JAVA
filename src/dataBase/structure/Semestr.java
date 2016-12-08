@@ -1,5 +1,6 @@
-package dataBase.actors;
+package dataBase.structure;
 
+import dataBase.SqlObject;
 import dataBase.generator.SqlClassGenerator;
 
 import java.sql.Connection;
@@ -8,24 +9,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Prowadzacy extends Uzytkownik {
-  private String login;
-  private String tytul;
+public class Semestr extends SqlObject {
+  private Long numer;
 
-  public String getLogin() {
-    return login;
+  public Long getNumer() {
+    return numer;
   }
 
-  public void setLogin(String login) {
-    this.login = login;
-  }
-
-  public String getTytul() {
-    return tytul;
-  }
-
-  public void setTytul(String tytul) {
-    this.tytul = tytul;
+  public void setNumer(Long numer) {
+    this.numer = numer;
   }
 
   @Override

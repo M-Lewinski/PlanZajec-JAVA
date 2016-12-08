@@ -1,6 +1,14 @@
 package dataBase.actors;
 
-public class Studenci {
+import dataBase.generator.SqlClassGenerator;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Student extends Uzytkownik {
   private String login;
   private String kierunek;
   private Long semestr;
@@ -45,5 +53,20 @@ public class Studenci {
 
   public void setIndeks(Long indeks) {
     this.indeks = indeks;
+  }
+
+  @Override
+  public void addObjectToBase(PreparedStatement stmt) throws SQLException {
+
+  }
+
+  @Override
+  public PreparedStatement addObjectToBase(Connection connection) throws SQLException {
+    return null;
+  }
+
+  @Override
+  public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator) {
+
   }
 }

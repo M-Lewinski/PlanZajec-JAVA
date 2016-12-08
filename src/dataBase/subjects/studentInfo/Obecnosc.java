@@ -1,6 +1,6 @@
 package dataBase.subjects.studentInfo;
 
-public class Obecnosci {
+public class Obecnosc {
   private String typ;
   private String student;
   private java.sql.Date data;

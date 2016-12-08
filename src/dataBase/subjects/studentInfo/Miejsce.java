@@ -1,6 +1,6 @@
 package dataBase.subjects.studentInfo;
 
-public class Miejsca {
+public class Miejsce {
   private Long numer;
   private Long id_zajecia;
   private String student;

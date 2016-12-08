@@ -1,6 +1,6 @@
 package dataBase.subjects;
 
-public class Sale {
+public class Sala {
   private String sala;
   private String budynek;
   private Long liczba_miejsc;

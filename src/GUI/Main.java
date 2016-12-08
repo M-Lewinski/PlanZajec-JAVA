@@ -21,7 +21,17 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 //        launch(args);
-        MySql baza = new MySql("admin","zxcv");
+//        MySql baza = new MySql("admin1","zxc");
+        MySql.setUser("admin","zxc");
+        MySql baza = MySql.getInstance();
+        if (baza==null){
+            System.err.println("BAZA NULL");
+            return;
+        }
+        Generator generator = new Generator();
+        generator.createWydzialy();
+//        generator.createKierunki();
+
         baza.closeConnect();
     }
 }

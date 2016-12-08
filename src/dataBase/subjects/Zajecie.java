@@ -1,6 +1,6 @@
 package dataBase.subjects;
 
-public class Zajecia {
+public class Zajecie {
   private Long id;
   private Long rocznik;
   private Long dzien;

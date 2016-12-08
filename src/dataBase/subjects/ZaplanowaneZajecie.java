@@ -1,6 +1,6 @@
 package dataBase.subjects;
 
-public class Zaplanowane_zajecia {
+public class ZaplanowaneZajecie {
   private java.sql.Date data;
   private Long id_zajecia;
 
