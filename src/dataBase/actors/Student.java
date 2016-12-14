@@ -66,7 +66,7 @@ public class Student extends Uzytkownik {
   }
 
   @Override
-  public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator) throws SQLException {
+  public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator, int i) throws SQLException {
 
   }
 }

@@ -1,7 +1,7 @@
 -- DROP DATABASE PlanZajec;
--- CREATE DATABASE PlanZajec;
+CREATE DATABASE PlanZajec;
 USE PlanZajec;
-
+--
 set foreign_key_checks = 0;
 
 -- Tablica uzytkownikow (Prowadzacy + Studenci)
@@ -32,7 +32,7 @@ CREATE TABLE Studenci(
 
 -- TABLICA WYDZIAŁÓW
 CREATE TABLE Wydzialy(
-  nazwa VARCHAR(20) -- PRIMARY KEY
+  nazwa VARCHAR(20) NOT NULL -- PRIMARY KEY
 );
 
 
@@ -52,7 +52,10 @@ CREATE TABLE Semestry(
 -- TABLICA PRZEDMIOTÓW
 CREATE TABLE Przedmioty(
   nazwa VARCHAR(20) NOT NULL, -- PRIMARY KEY
-  kierunek VARCHAR(20) NOT NULL -- FOREIGN KEY
+  kierunek VARCHAR(20) NOT NULL, -- FOREIGN KEY
+  red INTEGER,
+  green INTEGER,
+  blue INTEGER
 );
 
 -- TABLICA ZAJĘĆ

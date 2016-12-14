@@ -24,11 +24,11 @@ public class Generator {
     }
 
     /**
-     * Czytanie z pliku linii i zapisywanie ich do listy, która jest zwracana.
+     * Czytanie z pliku linii i zapisywanie ich do listy, która jest następnie zwracana.
      *
      * @param filePaths - Ścieżki do plikow.
      */
-    private List<ArrayList<String>> readFile(String[] filePaths) throws NullPointerException {
+    private List<ArrayList<String>> readFiles(String[] filePaths) throws NullPointerException {
         List fileList = new ArrayList<ArrayList<String>>();
         for (String path : filePaths) {
             BufferedReader buffer = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(path)));
@@ -65,7 +65,7 @@ public class Generator {
             PreparedStatement stmt = connect.prepareStatement(newObject.getInsertSQL());
             SqlClassGenerator sqlClassGenerator = new SqlClassGenerator();
             for (int i = 0; i < howMany; i++) {
-                newObject.generateObject(stmt, data, sqlClassGenerator);
+                newObject.generateObject(stmt, data, sqlClassGenerator, i);
                 stmt.addBatch();
             }
             stmt.executeBatch();
@@ -93,7 +93,7 @@ public class Generator {
     }
 
     public void createSqlObjectsFromFiles(SqlObject sqlObject,int howMany, String[] filePaths){
-        List<ArrayList<String>> data = this.readFile(filePaths);
+        List<ArrayList<String>> data = this.readFiles(filePaths);
         if (howMany > 0){
             this.generating(data,howMany,sqlObject);
         }
@@ -102,4 +102,5 @@ public class Generator {
         }
 
     }
+
 }

@@ -34,5 +34,5 @@ public abstract class SqlObject {
         this.insertSQL = insertSQL;
     }
 
-    public abstract void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator) throws SQLException;
+    public abstract void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator, int i) throws SQLException;
 }
