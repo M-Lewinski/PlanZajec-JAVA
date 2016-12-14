@@ -61,11 +61,6 @@ public class Student extends Uzytkownik {
   }
 
   @Override
-  public PreparedStatement addObjectToBase(Connection connection) throws SQLException {
-    return null;
-  }
-
-  @Override
   public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator, int i) throws SQLException {
 
   }

@@ -1,5 +1,6 @@
 package dataBase.generator;
 
+import dataBase.actors.Prowadzacy;
 import dataBase.structure.Kierunek;
 import dataBase.structure.Semestr;
 import dataBase.structure.Wydzial;
@@ -9,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by lewin on 12/8/16.
@@ -63,6 +65,22 @@ public class SqlClassGenerator {
     public void generate(Semestr semestr, List<ArrayList<String>> data, PreparedStatement stmt, int i) throws SQLException {
         if(!check(data,stmt)) return;
         Semestr newObject = new Semestr(Integer.parseInt(data.get(0).get(i)));
+        try {
+            newObject.addObjectToBase(stmt);
+        }catch (SQLException e){
+            throw e;
+        }
+    }
+
+    public void generate(Prowadzacy prowadzacy, List<ArrayList<String>> data, PreparedStatement stmt, int i) throws SQLException {
+        if(!check(data,stmt)) return;
+        Random rand = new Random();
+        int index = rand.nextInt(data.get(0).size());
+        String imie =data.get(0).get(index);
+        index = rand.nextInt(data.get(1).size());
+        String nazwisko = data.get(1).get(index);
+        String login = Character.toString(Character.toLowerCase(imie.charAt(0)))+Character.toString(Character.toLowerCase(nazwisko.charAt(0)));
+        Prowadzacy newObject = new Prowadzacy(login,imie,nazwisko,login);
         try {
             newObject.addObjectToBase(stmt);
         }catch (SQLException e){

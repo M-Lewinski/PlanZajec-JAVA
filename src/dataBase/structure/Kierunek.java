@@ -12,14 +12,9 @@ public class Kierunek extends SqlObject {
     private String nazwa;
     private String nazwa_wydzialu;
 
-    public Kierunek() {
-        String SQL = "INSERT INTO Kierunki " +
-                "VALUES(?,?)";
-        this.setInsertSQL(SQL);
-    }
+    public Kierunek() {}
 
     public Kierunek(String nazwa, String nazwa_wydzialu) {
-        this();
         this.nazwa = nazwa;
         this.nazwa_wydzialu = nazwa_wydzialu;
     }
@@ -58,5 +53,12 @@ public class Kierunek extends SqlObject {
         } catch (SQLException e) {
             throw e;
         }
+    }
+
+    @Override
+    public String getInsertSQL() {
+        String SQL = "INSERT INTO Kierunki " +
+                "VALUES(?,?)";
+        return SQL;
     }
 }

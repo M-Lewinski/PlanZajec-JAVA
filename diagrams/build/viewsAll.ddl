@@ -4,9 +4,6 @@ CREATE OR REPLACE VIEW UzytkownicyView
 AS
 SELECT login,imie,nazwisko FROM Uzytkownicy;
 
-CREATE ROLE IF NOT EXISTS 'Uzytkownik';
-GRANT SELECT,UPDATE ON UzytkownicyView TO Uzytkownik;
-
 DELIMITER $$
 DROP FUNCTION IF EXISTS `userName`$$
 CREATE FUNCTION userName()
@@ -20,3 +17,17 @@ DETERMINISTIC
     RETURN (result);
   END$$
 DELIMITER ;
+
+CREATE OR REPLACE VIEW Konto
+AS
+SELECT * FROM Uzytkownicy
+WHERE login = (SELECT userName());
+
+CREATE OR REPLACE VIEW V_Obecnosci
+AS
+  SELECT * FROM Obecnosci
+  WHERE student = (SELECT userName());
+
+# CREATE ROLE IF NOT EXISTS Uzytkownik;
+# GRANT SELECT ON UzytkownicyView TO Uzytkownik;
+# GRANT UPDATE ON Konto TO Uzytkownik;

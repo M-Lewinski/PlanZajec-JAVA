@@ -11,14 +11,9 @@ import java.util.List;
 public class Wydzial extends SqlObject {
     private String nazwa;
 
-    public Wydzial() {
-        String SQL = "INSERT INTO Wydzialy " +
-                "VALUES(?)";
-        this.setInsertSQL(SQL);
-    }
+    public Wydzial() {}
 
     public Wydzial(String nazwa) {
-        this();
         this.nazwa = nazwa;
     }
 
@@ -48,5 +43,12 @@ public class Wydzial extends SqlObject {
         } catch (SQLException e) {
             throw e;
         }
+    }
+
+    @Override
+    public String getInsertSQL() {
+        String SQL = "INSERT INTO Wydzialy " +
+                "VALUES(?)";
+        return SQL;
     }
 }

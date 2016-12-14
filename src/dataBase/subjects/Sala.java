@@ -13,11 +13,7 @@ public class Sala extends SqlObject {
     private String budynek;
     private int liczba_miejsc;
 
-    public Sala() {
-        String SQL = "INSERT INTO Sale " +
-                "VALUES(?,?,?)";
-        this.setInsertSQL(SQL);
-    }
+    public Sala() {}
 
     public Sala(String sala, String budynek, int liczba_miejsc) {
         this();
@@ -69,6 +65,13 @@ public class Sala extends SqlObject {
         } catch (SQLException e) {
             throw e;
         }
+    }
+
+    @Override
+    public String getInsertSQL() {
+        String SQL = "INSERT INTO Sale " +
+                "VALUES(?,?,?)";
+        return SQL;
     }
 }
 

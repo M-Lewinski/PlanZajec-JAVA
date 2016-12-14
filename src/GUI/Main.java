@@ -1,6 +1,7 @@
 package GUI;
 
 import dataBase.MySql;
+import dataBase.actors.Prowadzacy;
 import dataBase.generator.Generator;
 import dataBase.structure.Kierunek;
 import dataBase.structure.Semestr;
@@ -37,6 +38,7 @@ public class Main extends Application {
 //        generator.createSqlObjectsFromFiles(new Kierunek(),0,new String[]{"kierunki.txt"});
 //        generator.createSqlObjectsFromFiles(new Sala(),0,new String[]{"sale.txt"});
 //        generator.createSqlObjectsFromFiles(new Semestr(),0,new String[]{"semestry.txt"});
+        generator.createSqlObjectsFromFiles(new Prowadzacy(),1,new String[]{"NameList.txt","SurnameList.txt"});
         baza.closeConnect();
     }
 }

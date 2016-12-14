@@ -10,42 +10,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Semestr extends SqlObject {
-  private int numer;
+    private int numer;
 
-  public Semestr(){
-    String SQL = "INSERT INTO Semestry "+
-            "VALUES (?)";
-    this.setInsertSQL(SQL);
-  }
-
-  public Semestr(int numer){
-    this.numer = numer;
-  }
-
-  public int getNumer() {
-    return numer;
-  }
-
-  public void setNumer(int numer) {
-    this.numer = numer;
-  }
-
-  @Override
-  public void addObjectToBase(PreparedStatement stmt) throws SQLException {
-    try {
-      stmt.setInt(1, this.numer);
-    } catch (SQLException e) {
-      System.err.println("BLAD W Tworzeniu");
-      throw e;
+    public Semestr() {
     }
-  }
 
-  @Override
-  public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator, int i) throws SQLException {
-    try {
-      sqlClassGenerator.generate(this, data, stmt, i);
-    } catch (SQLException e) {
-      throw e;
+    public Semestr(int numer) {
+        this.numer = numer;
     }
-  }
+
+    public int getNumer() {
+        return numer;
+    }
+
+    public void setNumer(int numer) {
+        this.numer = numer;
+    }
+
+    @Override
+    public void addObjectToBase(PreparedStatement stmt) throws SQLException {
+        try {
+            stmt.setInt(1, this.numer);
+        } catch (SQLException e) {
+            System.err.println("BLAD W Tworzeniu");
+            throw e;
+        }
+    }
+
+    @Override
+    public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator, int i) throws SQLException {
+        try {
+            sqlClassGenerator.generate(this, data, stmt, i);
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public String getInsertSQL() {
+        String SQL = "INSERT INTO Semestry " +
+                "VALUES (?)";
+        return SQL;
+    }
 }
