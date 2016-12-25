@@ -79,7 +79,6 @@ public abstract class Uzytkownik extends SqlObject {
             stmt.setString(3, this.haslo);
             stmt.execute();
             String[] SQLs = {
-                    "GRANT UPDATE ON Konto TO ?@?",
                     "GRANT SELECT ON UzytkownicyView TO ?@?",
                     "GRANT SELECT ON Wydzialy TO ?@?",
                     "GRANT SELECT ON Kierunki TO ?@?",
@@ -99,7 +98,7 @@ public abstract class Uzytkownik extends SqlObject {
         }
     }
 
-    private void grantPrivilages(Connection connect, String SQL) throws SQLException {
+    protected void grantPrivilages(Connection connect, String SQL) throws SQLException {
         try (PreparedStatement stmt = connect.prepareStatement(SQL)) {
             stmt.setString(1, this.login);
             stmt.setString(2, this.host);
@@ -109,7 +108,7 @@ public abstract class Uzytkownik extends SqlObject {
         }
     }
 
-    private void grantPrivilages(Connection connect, String[] SQLs) throws SQLException {
+    protected void grantPrivilages(Connection connect, String[] SQLs) throws SQLException {
         for (String SQL :
                 SQLs) {
             try {

@@ -18,10 +18,10 @@ DETERMINISTIC
   END$$
 DELIMITER ;
 
-CREATE OR REPLACE VIEW Konto
-AS
-SELECT * FROM Uzytkownicy
-WHERE login = (SELECT userName());
+# CREATE OR REPLACE VIEW Konto
+# AS
+# SELECT * FROM Uzytkownicy
+# WHERE login = (SELECT userName());
 
 CREATE OR REPLACE VIEW V_Obecnosci
 AS
@@ -31,3 +31,22 @@ AS
 # CREATE ROLE IF NOT EXISTS Uzytkownik;
 # GRANT SELECT ON UzytkownicyView TO Uzytkownik;
 # GRANT UPDATE ON Konto TO Uzytkownik;
+
+DELIMITER $$
+DROP FUNCTION IF EXISTS `changePassword`$$
+CREATE FUNCTION changePassword(oldPassword VARCHAR(20),newPassword VARCHAR(20))
+  RETURNS BOOLEAN
+DETERMINISTIC
+  BEGIN
+    DECLARE userPassword VARCHAR(20);
+    DECLARE  nameU VARCHAR(20);
+    SELECT USER() INTO nameU;
+    SELECT haslo FROM Uzytkownicy INTO userPassword;
+    IF (oldPassword LIKE userPassword) THEN
+        UPDATE Uzytkownicy SET haslo = newPassword
+          WHERE login = (SELECT  userName());
+      RETURN (TRUE);
+    END IF;
+    RETURN (FALSE);
+  END$$
+DELIMITER ;
