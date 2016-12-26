@@ -48,20 +48,20 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 //        MySql baza = new MySql("admin1","zxc");
-        MySql.setUser("admin","zxc");
-        MySql baza = MySql.getInstance();
-        if (baza==null){
-            System.err.println("BAZA NULL");
-            return;
-        }
-        Generator generator = new Generator();
+//        MySql.setUser("admin","zxc");
+//        MySql baza = MySql.getInstance();
+//        if (baza==null){
+//            System.err.println("BAZA NULL");
+//        }
+//        Generator generator = new Generator();
 //        generator.createSqlObjectsFromFiles(new Wydzial(),0,new String[]{"wydzialy.txt"});
 //        generator.createSqlObjectsFromFiles(new Kierunek(),0,new String[]{"kierunki.txt"});
 //        generator.createSqlObjectsFromFiles(new Sala(),0,new String[]{"sale.txt"});
 //        generator.createSqlObjectsFromFiles(new Semestr(),0,new String[]{"semestry.txt"});
 //        generator.createSqlObjectsFromFiles(new Prowadzacy(),1,new String[]{"NameList.txt","SurnameList.txt"});
-        baza.closeConnect();
         launch(args);
+        if(MySql.getInstance()!=null)
+            MySql.getInstance().closeConnect();
     }
 
     public static Stage getCurrentPrimaryStage() {

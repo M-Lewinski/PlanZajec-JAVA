@@ -1,5 +1,8 @@
 package dataBase;
 
+import GUI.Main;
+import GUI.MessageMenu.Error.ErrorField;
+
 import java.sql.*;
 
 /**
@@ -34,9 +37,9 @@ public class MySql {
             if (!this.checkLogin(login)) {
                 throw new IllegalArgumentException();
             }
-            this.createConnect(login, password,"ZLE HASLO");
+            this.createConnect(login, password,"Wrong password: " + password + "\nYou should check, if the password you typed is correct");
         } catch (IllegalArgumentException e) {
-            System.err.println("ZLY LOGIN : " + login);
+            ErrorField.error("Wrong login: " + login + "\nYou should check, if the login you typed is correct.");
             this.closeConnect();
         }
     }
@@ -49,7 +52,7 @@ public class MySql {
      */
     private boolean checkLogin(String login) {
         Boolean result = false;
-        this.createConnect("checkLogin","","NO CONNECTION TO DATABASE");
+        this.createConnect("checkLogin","","NO CONNECTION TO DATABASE:\nCheck the connection with database.");
         PreparedStatement state = null;
         try {
             String SQL = "SELECT checkUser(?)";
@@ -99,7 +102,7 @@ public class MySql {
                 System.out.println("Connected Succesfully on " + login);
                 this.connect.setAutoCommit(false);
             } catch (SQLException e) {
-                System.err.println(error);
+                ErrorField.error(error);
                 this.closeConnect();
             }
         }
@@ -137,9 +140,6 @@ public class MySql {
                 instance = null;
             }
         }
-        if(instance!=null){
-            return instance;
-        }
-        return null;
+        return instance;
     }
 }

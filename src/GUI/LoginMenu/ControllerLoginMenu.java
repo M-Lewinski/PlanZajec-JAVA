@@ -6,6 +6,7 @@ import GUI.MessageMenu.Error.ErrorField;
 import GUI.MessageMenu.Info.InfoField;
 import GUI.MessageMenu.MessageField;
 import GUI.MessageMenu.Warning.WarningField;
+import dataBase.MySql;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -33,6 +34,13 @@ public class ControllerLoginMenu extends Controller {
     @FXML
     public void initialize(){
         this.setMessageLayout(mainPane);
+    }
+
+    public void login(){
+        MySql.setUser(this.fieldLogin.getText(),this.fieldPassword.getText());
+        if(MySql.getInstance()==null){
+            return;
+        }
     }
 
 }
