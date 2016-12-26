@@ -1,0 +1,16 @@
+.ErrorField {
+    -fx-background-color: #f2dede;
+    -fx-border-color: #ebccd1;
+    -fx-text-fill: #a94442;
+}
+.ErrorField .scroll-pane{
+    -fx-background-color: #f2dede;
+}
+
+.ErrorField .scroll-pane .viewport{
+    -fx-background-color: #f2dede;
+}
+
+.ErrorField .scroll-pane .content{
+    -fx-background-color: #f2dede;
+}

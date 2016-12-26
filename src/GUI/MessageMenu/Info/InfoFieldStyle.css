@@ -1,0 +1,16 @@
+.InfoField {
+    -fx-background-color: #d9edf7;
+    -fx-border-color: #bce8f1;
+    -fx-text-fill: #31708f;
+}
+.InfoField .scroll-pane{
+    -fx-background-color: #d9edf7;
+}
+
+.InfoField .scroll-pane .viewport{
+    -fx-background-color: #d9edf7;
+}
+
+.InfoField .scroll-pane .content{
+    -fx-background-color: #d9edf7;
+}

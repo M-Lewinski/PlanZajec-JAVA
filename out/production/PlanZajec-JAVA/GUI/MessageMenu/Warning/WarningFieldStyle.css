@@ -1,0 +1,16 @@
+.WarningField {
+    -fx-background-color: #fcf8e3;
+    -fx-border-color: #faebcc;
+    -fx-text-fill: #8a6d3b;
+}
+.WarningField .scroll-pane{
+    -fx-background-color: #fcf8e3;
+}
+
+.WarningField .scroll-pane .viewport{
+    -fx-background-color: #fcf8e3;
+}
+
+.WarningField .scroll-pane .content{
+    -fx-background-color: #fcf8e3;
+}

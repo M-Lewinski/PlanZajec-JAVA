@@ -10,54 +10,65 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #373a3c;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-      <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="7.0" maxWidth="-Infinity" prefHeight="600.0" prefWidth="260.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="534.0" AnchorPane.topAnchor="0.0">
-         <content>
-              <AnchorPane maxWidth="-Infinity" prefHeight="592.0" prefWidth="260.0" style="-fx-background-color: #fff;">
-                  <children>
-                      <ToggleButton layoutX="25.0" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="44.0" prefWidth="130.0" style="-fx-background-color: #337ab7; -fx-border-color: #2e6da4;" text="Main" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="134.0" AnchorPane.topAnchor="27.0">
-                          <toggleGroup>
-                              <ToggleGroup fx:id="schedulePicker" />
-                          </toggleGroup>
-                     <graphic>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #373a3c;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="7.0" maxWidth="-Infinity" prefHeight="600.0" prefWidth="260.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="534.0" AnchorPane.topAnchor="0.0">
+               <content>
+                    <AnchorPane maxWidth="-Infinity" prefHeight="592.0" prefWidth="260.0" style="-fx-background-color: #fff;">
+                        <children>
+                            <ToggleButton layoutX="25.0" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="44.0" prefWidth="130.0" style="-fx-background-color: #337ab7; -fx-border-color: #2e6da4;" text="Main" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="134.0" AnchorPane.topAnchor="27.0">
+                                <toggleGroup>
+                                    <ToggleGroup fx:id="schedulePicker" />
+                                </toggleGroup>
+                           <graphic>
+                                    <ImageView fitWidth="32.0" preserveRatio="true">
+                                 <image>
+                                    <Image url="@calendarMain.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                            </ToggleButton>
+                        <ToggleButton layoutX="119.0" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="44.0" prefWidth="130.0" style="-fx-background-color: #f0ad4e; -fx-border-color: #eea236;" text="Date" textFill="WHITE" AnchorPane.leftAnchor="130.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="schedulePicker1" />
+                           </toggleGroup>
+                           <graphic>
                               <ImageView fitWidth="32.0" preserveRatio="true">
-                           <image>
-                              <Image url="@calendarMain.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                      </ToggleButton>
-                  <ToggleButton layoutX="119.0" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="44.0" prefWidth="130.0" style="-fx-background-color: #f0ad4e; -fx-border-color: #eea236;" text="Date" textFill="WHITE" AnchorPane.leftAnchor="130.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="schedulePicker1" />
-                     </toggleGroup>
-                     <graphic>
-                        <ImageView fitWidth="32.0" preserveRatio="true">
-                           <image>
-                              <Image url="@calendarDate.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </ToggleButton>
-                  </children>
-              </AnchorPane>
-         </content>
-      </ScrollPane>
-      <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="266.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="534.0" style="-fx-background-color: #373a3c;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="266.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <content>
-            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="557.0" style="-fx-background-color: #373a3c;" />
-         </content>
-      </ScrollPane>
-        <MenuBar layoutX="78.0" layoutY="83.0" translateZ="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <menus>
-                <Menu mnemonicParsing="false" text="Schedule" />
-                <Menu mnemonicParsing="false" text="Account">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Settings" />
-                  <MenuItem mnemonicParsing="false" text="Logout" />
-               </items></Menu>
-            </menus>
-        </MenuBar>
-    </children>
+                                 <image>
+                                    <Image url="@calendarDate.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </ToggleButton>
+                        </children>
+                    </AnchorPane>
+               </content>
+            </ScrollPane>
+            <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="266.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="534.0" style="-fx-background-color: #373a3c;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="266.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
+               <content>
+                  <AnchorPane style="-fx-background-color: #373a3c;" />
+               </content>
+            </ScrollPane>
+              <MenuBar layoutX="78.0" layoutY="83.0" translateZ="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <menus>
+                      <Menu mnemonicParsing="false" text="Schedule" />
+                  <Menu mnemonicParsing="false" text="Admin" visible="false">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
+                      <Menu mnemonicParsing="false" text="Account">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Settings" />
+                        <MenuItem mnemonicParsing="false" text="Logout" />
+                     </items>
+                  </Menu>
+                  </menus>
+              </MenuBar>
+          </children>
+      </AnchorPane>
+   </children>
 </AnchorPane>

@@ -25,7 +25,7 @@ public class MySql {
 
     private MySql(String login, String password) {
         try {
-            Class.forName(JDBC);
+            Class.forName(this.JDBC);
         } catch (ClassNotFoundException e) {
             System.err.println("Driver ERROR");
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class MySql {
         PreparedStatement state = null;
         try {
             String SQL = "SELECT checkUser(?)";
-            state = connect.prepareStatement(SQL);
+            state = this.connect.prepareStatement(SQL);
             state.setString(1, login);
 
             ResultSet rs = state.executeQuery();
@@ -88,7 +88,7 @@ public class MySql {
     private void createConnect(String login, String password,String error) {
         if (this.dbms.equals("mysql")) {
             try {
-                connect = DriverManager.getConnection(
+                this.connect = DriverManager.getConnection(
                         "jdbc:" + this.dbms + "://" +
                                 this.serverName +
                                 ":" + this.portNumber.toString() +
@@ -97,7 +97,7 @@ public class MySql {
                         password
                 );
                 System.out.println("Connected Succesfully on " + login);
-                connect.setAutoCommit(false);
+                this.connect.setAutoCommit(false);
             } catch (SQLException e) {
                 System.err.println(error);
                 this.closeConnect();
