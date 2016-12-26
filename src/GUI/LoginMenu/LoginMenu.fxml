@@ -13,7 +13,7 @@
       <AnchorPane fx:id="mainPane" prefHeight="480.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button fx:id="buttonLogin" layoutX="265.0" layoutY="240.0" mnemonicParsing="false" onAction="#login" prefHeight="26.0" prefWidth="86.0" style="-fx-background-color: #337ab7;" text="Log in" textFill="WHITE" />
-            <Button fx:id="buttonExit" layoutX="357.0" layoutY="240.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="64.0" style="-fx-background-color: #d9534f;" text="Exit" textFill="WHITE" />
+            <Button fx:id="buttonExit" layoutX="357.0" layoutY="240.0" mnemonicParsing="false" onAction="#exitProgram" prefHeight="26.0" prefWidth="64.0" style="-fx-background-color: #d9534f;" text="Exit" textFill="WHITE" />
             <PasswordField fx:id="fieldPassword" layoutX="194.0" layoutY="206.0" prefHeight="26.0" prefWidth="227.0" promptText="Password" />
             <TextField fx:id="fieldLogin" layoutX="194.0" layoutY="174.0" prefWidth="227.0" promptText="Login" />
             <Label layoutX="224.0" layoutY="140.0" prefHeight="16.0" prefWidth="206.0" text="Logowanie">

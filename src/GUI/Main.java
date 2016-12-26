@@ -15,13 +15,15 @@ import java.io.IOException;
 public class Main extends Application {
 
     private static Stage currentPrimaryStage;
-    private static FXMLLoader loader = new FXMLLoader();
+    private static FXMLLoader loader;
     private static Scene currentScene;
     private static Parent rootLayout;
     private static Controller controller;
+    private static MySql.Refresher refresher;
 
     public static void changeScene(String title,String resource) throws Exception{
         try {
+            Main.loader = new FXMLLoader();
             Main.loader.setLocation(Main.class.getResource(resource));
             Main.rootLayout = Main.loader.load();
             Main.controller = Main.loader.getController();
@@ -29,7 +31,9 @@ public class Main extends Application {
             Main.currentScene = newScene;
             Main.currentPrimaryStage.setTitle(title);
             Main.currentPrimaryStage.setScene(newScene);
-            Main.controller.setStyleSheets(newScene);
+            if (Main.controller!=null){
+                Main.controller.setStyleSheets(newScene);
+            }
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -38,7 +42,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 //        Parent root = FXMLLoader.load(getClass().getResource("LoginMenu/LoginMenu.fxml"));
-//        Parent root = FXMLLoader.load(getClass().getResource("ScheduleMenu/Schedule.fxml"));
+//        Parent root = FXMLLoader.load(getClass().getResource("ScheduleMenu/ScheduleMenu.fxml"));
         Main.currentPrimaryStage = primaryStage;
         Main.changeScene("Logging Screen","LoginMenu/LoginMenu.fxml");
         primaryStage.setResizable(true);
@@ -60,8 +64,17 @@ public class Main extends Application {
 //        generator.createSqlObjectsFromFiles(new Semestr(),0,new String[]{"semestry.txt"});
 //        generator.createSqlObjectsFromFiles(new Prowadzacy(),1,new String[]{"NameList.txt","SurnameList.txt"});
         launch(args);
-        if(MySql.getInstance()!=null)
-            MySql.getInstance().closeConnect();
+        if(Main.refresher!=null){
+            Main.refresher.setThreadIsAlive(false);
+            try {
+                Main.refresher.getThread().join();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+            if(MySql.getInstance()!=null) {
+                MySql.getInstance().closeConnect();
+            }
     }
 
     public static Stage getCurrentPrimaryStage() {
@@ -82,5 +95,13 @@ public class Main extends Application {
 
     public static Controller getController() {
         return controller;
+    }
+
+    public static MySql.Refresher getRefresher() {
+        return refresher;
+    }
+
+    public static void setRefresher(MySql.Refresher refresher) {
+        Main.refresher = refresher;
     }
 }

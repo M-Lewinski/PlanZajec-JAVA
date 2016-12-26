@@ -2,8 +2,17 @@ package dataBase;
 
 import GUI.Main;
 import GUI.MessageMenu.Error.ErrorField;
+import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.control.IndexedCell;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 
 import java.sql.*;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lewin on 11/17/16.
@@ -21,26 +30,40 @@ public class MySql {
     private String JDBC = "com.mysql.jdbc.Driver";
     private String checkLogin = "checkLogin";
     private String dataBaseName = "PlanZajec";
+    private Boolean showErrors = true;
 
     private static String userLogin = null;
     private static String userPassword = null;
 
-
     private MySql(String login, String password) {
         try {
             Class.forName(this.JDBC);
+            DriverManager.setLoginTimeout(300);
         } catch (ClassNotFoundException e) {
-            System.err.println("Driver ERROR");
-            e.printStackTrace();
+            if(this.showErrors){
+                System.err.println("Driver ERROR");
+                e.printStackTrace();
+            }
         }
         try {
             if (!this.checkLogin(login)) {
-                throw new IllegalArgumentException();
+                if(this.showErrors){
+                    ErrorField.error("Wrong login: " + login + "\nYou should check, if the login you typed is correct.");
+                }
             }
-            this.createConnect(login, password,"Wrong password: " + password + "\nYou should check, if the password you typed is correct");
-        } catch (IllegalArgumentException e) {
-            ErrorField.error("Wrong login: " + login + "\nYou should check, if the login you typed is correct.");
-            this.closeConnect();
+            else {
+                try {
+                    this.createConnect(login, password);
+                } catch (SQLException e) {
+                    if (this.showErrors) {
+                        ErrorField.error("Wrong password: " + password + "\nYou should check, if the password you typed is correct");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            if(this.showErrors){
+                ErrorField.error("NO CONNECTION TO DATABASE:\nCheck the connection with database.");
+            }
         }
     }
 
@@ -50,9 +73,13 @@ public class MySql {
      *
      * @param login - login, na który chce się zalogować użytkownik
      */
-    private boolean checkLogin(String login) {
+    private boolean checkLogin(String login) throws SQLException {
         Boolean result = false;
-        this.createConnect("checkLogin","","NO CONNECTION TO DATABASE:\nCheck the connection with database.");
+        try {
+            this.createConnect("checkLogin","");
+        }catch (SQLException e){
+            throw e;
+        }
         PreparedStatement state = null;
         try {
             String SQL = "SELECT checkUser(?)";
@@ -64,12 +91,16 @@ public class MySql {
             if (rs.next()) {
                 result = rs.getBoolean(1);
             } else {
-                System.err.println("ERROR:: EXECUTE QUERY :: ERROR");
+                if(this.showErrors){
+                    System.err.println("ERROR:: EXECUTE QUERY :: ERROR");
+                }
             }
             rs.close();
         } catch (SQLException e) {
-            System.err.println("ERROR::LOGIN CHECK::ERROR");
-            e.printStackTrace();
+            if(this.showErrors){
+                System.err.println("ERROR::LOGIN CHECK::ERROR");
+                e.printStackTrace();
+            }
         } finally {
             try {
                 this.closeConnect();
@@ -77,8 +108,10 @@ public class MySql {
                     state.close();
                 }
             } catch (SQLException e) {
-                System.err.println("CLOSE STATEMENT");
-                e.printStackTrace();
+                if(this.showErrors){
+                    System.err.println("CLOSE STATEMENT");
+                    e.printStackTrace();
+                }
             }
         }
         return result;
@@ -88,7 +121,7 @@ public class MySql {
     /**
      * Tworzenie polaczenia z baza danych
      */
-    private void createConnect(String login, String password,String error) {
+    private void createConnect(String login, String password) throws SQLException {
         if (this.dbms.equals("mysql")) {
             try {
                 this.connect = DriverManager.getConnection(
@@ -102,29 +135,44 @@ public class MySql {
                 System.out.println("Connected Succesfully on " + login);
                 this.connect.setAutoCommit(false);
             } catch (SQLException e) {
-                ErrorField.error(error);
-                this.closeConnect();
+                if(this.showErrors){
+                    this.closeConnect();
+                    throw e;
+                }
             }
+        }
+    }
+
+    public boolean refreshConnection(){
+        try {
+            this.createConnect(userLogin,userPassword);
+            return true;
+        }catch (SQLException e){
+            return false;
         }
     }
 
     public void closeConnect() {
         try {
             if (this.connect != null) {
-                this.connect.close();
+                if(!this.connect.isClosed()){
+                    this.connect.close();
+                }
                 this.connect = null;
             }
         } catch (SQLException e) {
-            System.err.println("MYSQL CLOSE ERROR");
-            e.printStackTrace();
+            if(this.showErrors){
+                System.err.println("MYSQL CLOSE ERROR");
+                e.printStackTrace();
+            }
         }
     }
 
-    public Connection getConnect() {
-        return connect;
+    public synchronized Connection getConnect() {
+        return this.connect;
     }
 
-    public static void setUser(String login,String password){
+    public static synchronized void setUser(String login,String password){
         MySql.userLogin = login;
         MySql.userPassword = password;
     }
@@ -133,7 +181,7 @@ public class MySql {
         return userLogin;
     }
 
-    public static MySql getInstance() {
+    public static synchronized MySql getInstance() {
         if (instance == null){
             instance = new MySql(userLogin,userPassword);
             if (instance.getConnect() == null){
@@ -142,4 +190,96 @@ public class MySql {
         }
         return instance;
     }
+
+    public void setShowErrors(Boolean showErrors) {
+        this.showErrors = showErrors;
+    }
+
+    public class Refresher implements Runnable{
+
+        private boolean threadIsAlive = true;
+        private BooleanProperty valid = new SimpleBooleanProperty(true);
+        private Thread thread;
+        private Label label;
+        private boolean refresh(){
+//            System.out.println("TEST");
+            return MySql.getInstance().refreshConnection();
+        }
+        private boolean ping(){
+            try {
+                return MySql.getInstance().getConnect().isValid(5);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        public Refresher(){
+            this.thread = new Thread(this);
+            thread.start();
+        }
+
+        @Override
+        public void run() {
+            while (this.threadIsAlive){
+                boolean newValid;
+                if(this.valid.getValue())
+                    newValid = this.ping();
+                else {
+                    newValid = this.refresh();
+                }
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        valid.setValue(newValid);
+                    }
+                });
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public void setThreadIsAlive(boolean threadIsAlive) {
+            this.threadIsAlive = threadIsAlive;
+        }
+        public Thread getThread() {
+            return thread;
+        }
+
+        public void createStatusLabel(AnchorPane anchorPane){
+            this.label = new Label();
+            label.setText("Connection established!");
+            label.setStyle("-fx-text-fill: #3c763d");
+            AnchorPane.setTopAnchor(label,0.0);
+            this.label.setPrefHeight(29.0);
+            AnchorPane.setRightAnchor(label,10.0);
+            this.valid.addListener((observable, oldValue, newValue) -> {
+                if(newValue){
+                    label.setText("Connection established!");
+                    label.setStyle("-fx-text-fill: #3c763d");
+                }
+                else {
+                    label.setText("Connection problem!");
+                    label.setStyle("-fx-text-fill: #a94442");
+                }
+            });
+            this.label.toFront();
+            anchorPane.getChildren().add(this.label);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    valid.setValue(valid.getValue());
+                }
+            });
+        }
+    }
+
+    public void createRefresher(){
+        Refresher refresher = new Refresher();
+        Main.setRefresher(refresher);
+    }
+
 }
