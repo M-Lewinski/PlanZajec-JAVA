@@ -42,7 +42,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 //        Parent root = FXMLLoader.load(getClass().getResource("LoginMenu/LoginMenu.fxml"));
-//        Parent root = FXMLLoader.load(getClass().getResource("ScheduleMenu/ScheduleMenu.fxml"));
+//        Parent root = FXMLLoader.load(getClass().getResource("ScheduleMenu/MainMenu.fxml"));
         Main.currentPrimaryStage = primaryStage;
         Main.changeScene("Logging Screen","LoginMenu/LoginMenu.fxml");
         primaryStage.setResizable(true);

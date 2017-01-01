@@ -1,6 +1,7 @@
 package GUI.MessageMenu.Info;
 
 import GUI.Controller;
+import GUI.Main;
 import GUI.MessageMenu.MessageField;
 
 /**
