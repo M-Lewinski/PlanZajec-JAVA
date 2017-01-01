@@ -1,27 +1,20 @@
-package GUI.ScheduleMenu;
+package GUI.AdminMenu;
 
 import GUI.Controller;
-import GUI.Main;
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
 /**
  * Created by lewin on 12/26/16.
