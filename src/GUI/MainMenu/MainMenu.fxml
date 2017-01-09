@@ -1,36 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="700.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainMenu.ControllerMainMenu">
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainMenu.ControllerMainMenu">
    <children>
-      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-              <MenuBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                  <menus>
-                      <Menu mnemonicParsing="false" text="Schedule" />
-                  <Menu mnemonicParsing="false" text="Admin" visible="false">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
-                  </Menu>
-                      <Menu mnemonicParsing="false" text="Account">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Settings" />
-                        <MenuItem mnemonicParsing="false" text="Logout" />
-                     </items>
-                  </Menu>
-                  </menus>
-              </MenuBar>
-         </children>
-      </AnchorPane>
-      <AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
-         <children>
-            <fx:include source="../ScheduleMenu/ScheduleMenu.fxml" />
-         </children>
-      </AnchorPane>
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="629.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <fx:include source="MenuBar.fxml" />
+         </top>
+         <center>
+            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+               <children>
+                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="1024.0" style="-fx-background-color: #373a3c;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Group>
+                                 <children>
+                                    <Label layoutX="76.0" text="Welcome to" textFill="#ffffffe4" translateY="-90.0">
+                                       <font>
+                                          <Font name="System Bold Italic" size="56.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutY="71.0" text="Scheduler!" textFill="WHITE" translateY="-80.0">
+                                       <font>
+                                          <Font name="System Bold Italic" size="86.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </Group>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+         </center>
+      </BorderPane>
    </children>
 </AnchorPane>

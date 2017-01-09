@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainMenu.ControllerMenuBar">
+   <children>
+      <MenuBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="29.0" prefWidth="291.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <menus>
+            <Menu fx:id="schedulTab" mnemonicParsing="false" text="Schedule">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/schedule.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#goToScheduleMenu" text="Check schedule" />
+               </items>
+            </Menu>
+            <Menu fx:id="adminTab" mnemonicParsing="false" text="Admin">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/admin.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#goToAdminMenu" text="Manage Database" />
+               </items>
+            </Menu>
+            <Menu fx:id="accountTab" mnemonicParsing="false" text="Account">
+               <items>
+                  <MenuItem fx:id="settings" mnemonicParsing="false" onAction="#goToSettingsMenu" text="Settings">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/settings.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem fx:id="logout" mnemonicParsing="false" onAction="#goToLoginMenu" text="Logout">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/logout.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+               </items>
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/account.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Menu>
+         </menus>
+      </MenuBar>
+   </children>
+</AnchorPane>

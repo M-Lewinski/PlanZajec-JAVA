@@ -45,7 +45,7 @@ public class ControllerLoginMenu extends Controller {
             try {
                 MySql.getInstance().createRefresher();
 //                Main.changeScene("Schedule","MainMenu/MainMenu.fxml");
-                Main.changeScene("Schedule", "ScheduleMenu/ScheduleMenu.fxml");
+                Main.changeScene("Schedule", "MainMenu/MainMenu.fxml");
             }catch (Exception e){
                 e.printStackTrace();
             }
