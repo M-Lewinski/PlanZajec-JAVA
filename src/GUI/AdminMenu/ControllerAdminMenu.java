@@ -1,8 +1,12 @@
 package GUI.AdminMenu;
 
 import GUI.Controller;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
+
+import java.rmi.activation.ActivationID;
 
 /**
  * Created by lewin on 1/1/17.
@@ -23,6 +27,7 @@ public class ControllerAdminMenu extends Controller{
 
     public BorderPane currentPane;
 
+    private ToggleButton oldToggle;
     public void changePane(BorderPane newBorderPane){
         if (currentPane!=null){
             currentPane.setVisible(false);
@@ -31,22 +36,34 @@ public class ControllerAdminMenu extends Controller{
         currentPane = newBorderPane;
     }
 
-    public void changeStudents() {
-        this.changePane(students);
+    public void actionStudents(ActionEvent event) {
+        event.consume();
+        this.togglePane(students,event,oldToggle);
     }
-    public void changeProffesors(){
-        this.changePane(proffesors);
+    public void actionProffesors(ActionEvent event){
+        event.consume();
+        this.togglePane(proffesors,event,oldToggle);
     }
-    public void changeSubjects(){
-        this.changePane(subjects);
+    public void actionSubjects(ActionEvent event){
+        event.consume();
+        this.togglePane(subjects,event,oldToggle);
+
     }
-    public void changeLectures(){
-        this.changePane(lectures);
+    public void actionLectures(ActionEvent event){
+        event.consume();
+        this.togglePane(lectures,event,oldToggle);
     }
-    public void changeFaculties(){
-        this.changePane(faculties);
+    public void actionFaculties(ActionEvent event){
+        event.consume();
+        this.togglePane(faculties,event,oldToggle);
     }
-    public void changeBuildings(){
-        this.changePane(buildings);
+    public void actionBuildings(ActionEvent event){
+        event.consume();
+        this.togglePane(buildings,event,oldToggle);
+    }
+
+    public void togglePane(BorderPane newPane, ActionEvent event,ToggleButton oldToggle){
+        this.changePane(newPane);
+        this.oldToggle = this.toggleHighlight(event,oldToggle);
     }
 }

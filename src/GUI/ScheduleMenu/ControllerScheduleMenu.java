@@ -1,27 +1,23 @@
 package GUI.ScheduleMenu;
 
 import GUI.Controller;
-import GUI.Main;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import GUI.MessageMenu.Error.ErrorField;
+import dataBase.structure.Wydzial;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lewin on 12/26/16.
@@ -31,7 +27,10 @@ public class ControllerScheduleMenu extends Controller{
     @FXML
     private AnchorPane mainPane;
     @FXML
-    private Button check;
+    private Button checkMain;
+    @FXML
+    private Button checkDate;
+
     @FXML
     private AnchorPane schedule;
 //    private StackPane schedule;
@@ -39,19 +38,42 @@ public class ControllerScheduleMenu extends Controller{
     private TabPane scheduleTab;
     @FXML
     public Group subjectBoxes = new Group();
-    @FXML
-    private Timeline scrollTimeline = new Timeline();
+//    @FXML
+//    private Timeline scrollTimeline = new Timeline();
 //    @FXML
 //    private double scrollDirection = 0.0;
     @FXML
     private ScrollPane scroll;
 
+    @FXML
+    private ToggleButton mainSchedule;
+    @FXML
+    private ToggleButton dateSchedule;
+    @FXML
+    private AnchorPane datePane;
+
     private double previousX;
     private double previousY;
 
+    private DoubleProperty fontSize = new SimpleDoubleProperty(5);
+
+
+    private ToggleButton oldToggle;
+
+    @FXML
+    private ChoiceBox faculty;
+
+    @FXML
+    private ChoiceBox course;
+
+    @FXML
+    private ChoiceBox semestr;
+
+    @FXML
+    private ChoiceBox year;
+
 //    private StackPane testPane;
     public ControllerScheduleMenu(){
-
     }
     @FXML
     public void initialize(){
@@ -63,10 +85,16 @@ public class ControllerScheduleMenu extends Controller{
         this.schedule.getChildren().add(this.subjectBoxes);
         this.setZooming();
         this.setDragging();
+        this.mainSchedule.fire();
+        ArrayList<String> test = new ArrayList<>();
+        test.add("aad");
+        test.add("test");
+        this.addChoiceBoxContent(faculty,test);
+//        this.addListenerChoiceBox(faculty,course);
+        this.setupButtons();
     }
 
     private void setZooming(){
-
         scroll.viewportBoundsProperty().addListener(((observable, oldValue, newValue) -> {
 //            schedule.setPrefSize(newValue.getWidth(),newValue.getHeight());
             schedule.setMinSize(newValue.getWidth(),newValue.getHeight());
@@ -76,21 +104,30 @@ public class ControllerScheduleMenu extends Controller{
             @Override
             public void handle(ScrollEvent event) {
                 final double scaleDelta = 1.1;
+                final double scaleFont = 1.01;
                 event.consume();
                 if(event.getDeltaY() == 0){
                     return;
                 }
-                double scaleFactor = (event.getDeltaY() > 0)
-                        ? scaleDelta
-                        : 1/scaleDelta;
-
-                Bounds boxesBounds = subjectBoxes.getLayoutBounds();
-                final Bounds viewportBounds = scroll.getViewportBounds();
-
+                double scaleFactor;
+                double scaleFactorFont;
+                if (event.getDeltaY() > 0) {
+                    scaleFactor = scaleDelta;
+                    scaleFactorFont = scaleFont;
+                }
+                else {
+                    scaleFactor = 1 / scaleDelta;
+                    scaleFactorFont = 1/ scaleFont;
+                }
                 subjectBoxes.setScaleX(subjectBoxes.getScaleX()*scaleFactor);
                 subjectBoxes.setScaleY(subjectBoxes.getScaleY()*scaleFactor);
-
+                double size = fontSize.getValue();
+//                if((size <= 16 && size >= 3)){
+//                    System.out.println("HEJ");
+                    fontSize.setValue(fontSize.getValue()*scaleFactorFont);
+//                }
                 scroll.layout();
+
             }
         });
 //        schedule.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
@@ -109,20 +146,20 @@ public class ControllerScheduleMenu extends Controller{
                     double deltaX = previousX - event.getX();
                     if(Math.abs(deltaX) > 20){
                         if(deltaX > 0){
-                            scroll.setHvalue(scroll.getHvalue() + 0.02);
+                            scroll.setHvalue(scroll.getHvalue() + 0.03);
                         }
                         else if(deltaX < 0){
-                            scroll.setHvalue(scroll.getHvalue() - 0.02);
+                            scroll.setHvalue(scroll.getHvalue() - 0.03);
                         }
                     }
 
                     double deltaY = previousY - event.getY();
                     if(Math.abs(deltaY) > 20){
                         if(deltaY>0){
-                            scroll.setVvalue(scroll.getVvalue() + 0.02);
+                            scroll.setVvalue(scroll.getVvalue() + 0.03);
                         }
                         else if(deltaY < 0){
-                            scroll.setVvalue(scroll.getVvalue() - 0.02);
+                            scroll.setVvalue(scroll.getVvalue() - 0.03);
                         }
                     }
                 }
@@ -141,31 +178,68 @@ public class ControllerScheduleMenu extends Controller{
     @FXML
     public void checkSchedule(ActionEvent actioEvent){
         actioEvent.consume();
-        Rectangle rectangle = new Rectangle();
-        rectangle.setX(1000);
-        rectangle.setY(1000);
-        rectangle.setWidth(40);
-        rectangle.setHeight(40);
-        Rectangle rectangle2 = new Rectangle();
-        rectangle2.setX(0);
-        rectangle2.setY(0);
-        rectangle2.setWidth(40);
-        rectangle2.setHeight(40);
-        this.subjectBoxes.getChildren().add(rectangle);
-        this.subjectBoxes.getChildren().add(rectangle2);
+//        Rectangle rectangle = new Rectangle();
+//        rectangle.setX(1000);
+//        rectangle.setY(1000);
+//        rectangle.setWidth(40);
+//        rectangle.setHeight(40);
+//        Rectangle rectangle2 = new Rectangle();
+//        rectangle2.setX(0);
+//        rectangle2.setY(0);
+//        rectangle2.setWidth(40);
+//        rectangle2.setHeight(40);
+//        this.subjectBoxes.getChildren().add(rectangle);
+//        this.subjectBoxes.getChildren().add(rectangle2);
+//
+        SubjecBox subjecBox = new SubjecBox(fontSize,100,100,100,38);
+        subjecBox.setText("TESTAAAAAAAAAAAAAAAAAAAAAAAa");
+        this.subjectBoxes.getChildren().add(subjecBox);
         scroll.layout();
     }
 
-//    public void zooming(ScrollEvent event){
-//        final double scaleDelta = 1.1;
-//        event.consume();
-//        if(event.getDeltaY() == 0){
-//            return;
+    public void actionMainSchedule(ActionEvent event){
+        event.consume();
+        oldToggle = this.toggleHighlight(event,this.oldToggle);
+        this.showMain();
+    }
+
+
+
+    public void actionDateSchedule(ActionEvent event){
+        event.consume();
+        oldToggle = this.toggleHighlight(event,this.oldToggle);
+        this.showDate();
+    }
+
+
+
+    public void showMain(){
+        datePane.setVisible(false);
+        datePane.setManaged(false);
+        checkDate.setVisible(false);
+        checkMain.setVisible(true);
+    }
+
+
+    public void showDate(){
+        datePane.setVisible(true);
+        datePane.setManaged(true);
+        checkDate.setVisible(true);
+        checkMain.setVisible(false);
+    }
+
+    public void setupButtons(){
+//        try {
+//            List<Wydzial> list = Wydzial.getAllObjects();
+//            List<String> listString = new ArrayList<String>();
+//            for (Wydzial wydzial : list){
+//                listString.add(wydzial.getNazwa());
+//            }
+//            addChoiceBoxContent(this.faculty,listString);
 //        }
-//        double scaleFactor = (event.getDeltaY() > 0)
-//                ? scaleDelta
-//                : 1/scaleDelta;
-//        this.subjectBoxes.setScaleX(this.subjectBoxes.getScaleX()*scaleFactor);
-//        this.subjectBoxes.setScaleY(this.subjectBoxes.getScaleY()*scaleFactor);
-//    }
+//        catch (SQLException e){
+//            ErrorField.error("Unable to load faculty from DataBase!");
+//        }
+    }
+
 }

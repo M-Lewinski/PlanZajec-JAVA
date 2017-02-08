@@ -31,7 +31,7 @@ public class Main extends Application {
 
             double oldWidth = Main.currentPrimaryStage.getWidth();
             double oldHeight = Main.currentPrimaryStage.getHeight();
-
+            boolean isMax = Main.currentPrimaryStage.isMaximized();
             Scene newScene = new Scene(Main.rootLayout);
 
 //

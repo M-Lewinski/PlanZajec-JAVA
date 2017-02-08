@@ -134,6 +134,7 @@ public class MySql {
                 );
                 System.out.println("Connected Succesfully on " + login);
                 this.connect.setAutoCommit(false);
+                this.connect.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             } catch (SQLException e) {
                 if(this.showErrors){
                     this.closeConnect();

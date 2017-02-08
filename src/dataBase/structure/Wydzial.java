@@ -1,10 +1,10 @@
 package dataBase.structure;
 
+import dataBase.MySql;
 import dataBase.SqlObject;
 import dataBase.generator.SqlClassGenerator;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,5 +50,50 @@ public class Wydzial extends SqlObject {
         String SQL = "INSERT INTO Wydzialy " +
                 "VALUES(?)";
         return SQL;
+    }
+
+    @Override
+    public List<String> getRelatedNames() throws SQLException{
+        List<String> names = new ArrayList<String>();
+        String SQL = "SELECT nazwa FROM Kierunki WHERE nazwa_wydzialu = ?";
+        Connection connect = MySql.getInstance().getConnect();
+        try {
+            PreparedStatement stmt = connect.prepareStatement(SQL);
+            setValueSQL(stmt,1,nazwa);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                names.add(rs.getString(1));
+            }
+        } catch (SQLException e){
+            throw e;
+        }
+        return names;
+    };
+
+    public static List<Wydzial> getAllObjects() throws SQLException {
+        List<Wydzial> list = new ArrayList<Wydzial>();
+        String SQL = "SELECT * FROM Wydzialy";
+        Connection connect = MySql.getInstance().getConnect();
+        try {
+            Statement stmt = connect.createStatement();
+            stmt.executeQuery(SQL);
+            ResultSet rs = stmt.getResultSet();
+            while (rs.next()){
+                list.add(Wydzial.setValuesFromRS(rs));
+            }
+        } catch (SQLException e){
+            throw e;
+        }
+        return list;
+    }
+
+    public static Wydzial setValuesFromRS(ResultSet rs) throws SQLException {
+        try {
+            String nazwa = rs.getString(1);
+            Wydzial newWydzial = new Wydzial(nazwa);
+            return newWydzial;
+        } catch (SQLException e){
+            throw e;
+        }
     }
 }

@@ -21,7 +21,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
 <BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.ScheduleMenu.ControllerScheduleMenu">
    <center>
       <AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="655.0" prefWidth="800.0">
@@ -34,7 +33,7 @@
                            <children>
                               <HBox>
                                  <children>
-                                        <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="130.0" style="-fx-background-color: #337ab7; -fx-border-color: #2e6da4;" text="Main" textFill="WHITE">
+                                        <ToggleButton fx:id="mainSchedule" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#actionMainSchedule" opacity="0.5" prefWidth="130.0" style="-fx-background-color: #337ab7; -fx-border-color: #2e6da4;" text="Main" textFill="WHITE">
                                             <toggleGroup>
                                                 <ToggleGroup fx:id="schedulePicker" />
                                             </toggleGroup>
@@ -46,10 +45,7 @@
                                           </ImageView>
                                        </graphic>
                                         </ToggleButton>
-                                    <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="130.0" style="-fx-background-color: #f0ad4e; -fx-border-color: #eea236;" text="Date" textFill="WHITE">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="schedulePicker1" />
-                                       </toggleGroup>
+                                    <ToggleButton fx:id="dateSchedule" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#actionDateSchedule" opacity="0.5" prefWidth="130.0" style="-fx-background-color: #f0ad4e; -fx-border-color: #eea236;" text="Date" textFill="WHITE" toggleGroup="$schedulePicker">
                                        <graphic>
                                           <ImageView fitWidth="32.0" preserveRatio="true">
                                              <image>
@@ -63,25 +59,34 @@
                               <AnchorPane prefHeight="235.0" prefWidth="260.0">
                                  <children>
                                     <CheckBox layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Show related subjects" />
-                                    <ChoiceBox layoutX="14.0" layoutY="58.0" prefHeight="26.0" prefWidth="197.0" />
+                                    <ChoiceBox fx:id="faculty" layoutX="14.0" layoutY="58.0" prefHeight="26.0" prefWidth="197.0" />
                                     <Label layoutX="14.0" layoutY="42.0" text="Faculty" />
                                     <Label layoutX="14.0" layoutY="94.0" text="Course" />
-                                    <ChoiceBox disable="true" layoutX="14.0" layoutY="110.0" prefHeight="26.0" prefWidth="197.0" />
+                                    <ChoiceBox fx:id="course" disable="true" layoutX="14.0" layoutY="110.0" prefHeight="26.0" prefWidth="197.0" />
                                     <Label layoutX="14.0" layoutY="143.0" text="Semester" />
-                                    <ChoiceBox disable="true" layoutX="14.0" layoutY="159.0" prefHeight="26.0" prefWidth="63.0" />
+                                    <ChoiceBox fx:id="semestr" disable="true" layoutX="14.0" layoutY="159.0" prefHeight="26.0" prefWidth="63.0" />
                                     <Label layoutX="14.0" layoutY="192.0" text="Year" />
-                                    <ChoiceBox disable="true" layoutX="14.0" layoutY="208.0" prefHeight="26.0" prefWidth="117.0" />
+                                    <ChoiceBox fx:id="year" disable="true" layoutX="14.0" layoutY="208.0" prefHeight="26.0" prefWidth="117.0" />
                                  </children>
                               </AnchorPane>
-                              <AnchorPane prefHeight="61.0" prefWidth="262.0">
+                              <AnchorPane fx:id="datePane" prefHeight="61.0" prefWidth="262.0">
                                  <children>
                                     <DatePicker layoutX="14.0" layoutY="25.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="25.0" />
                                     <Label layoutX="14.0" layoutY="6.0" text="Date" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="216.0" AnchorPane.topAnchor="6.0" />
                                  </children>
                               </AnchorPane>
-                              <AnchorPane prefHeight="36.0" prefWidth="262.0">
+                              <AnchorPane prefHeight="43.0" prefWidth="262.0">
                                  <children>
-                                    <Button fx:id="check" layoutX="14.0" mnemonicParsing="false" onAction="#checkSchedule" prefHeight="28.0" prefWidth="164.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Check schedule" textFill="WHITE">
+                                    <Button fx:id="checkMain" layoutX="14.0" layoutY="5.0" mnemonicParsing="false" onAction="#checkSchedule" prefHeight="28.0" prefWidth="164.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Check schedule" textFill="WHITE">
+                                       <graphic>
+                                          <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/magnifier.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Button fx:id="checkDate" layoutX="14.0" layoutY="5.0" mnemonicParsing="false" onAction="#checkSchedule" prefHeight="28.0" prefWidth="164.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Check schedule" textFill="WHITE">
                                        <graphic>
                                           <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                              <image>

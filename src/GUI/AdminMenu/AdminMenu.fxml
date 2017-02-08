@@ -923,7 +923,7 @@
                   </AnchorPane>
                   <VBox prefWidth="200.0" style="-fx-background-color: #373a3c;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#changeStudents" selected="true" style="-fx-background-color: #35478C; -fx-border-color: #2e3e7a;" text="Students" textFill="WHITE">
+                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#actionStudents" opacity="0.5" selected="true" style="-fx-background-color: #35478C; -fx-border-color: #2e3e7a;" text="Students" textFill="WHITE">
                            <graphic>
                               <ImageView fitHeight="64.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -935,7 +935,7 @@
                               <ToggleGroup fx:id="paneToggle" />
                            </toggleGroup>
                         </ToggleButton>
-                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#changeProffesors" style="-fx-background-color: #FA5A04#FA5A04; -fx-border-color: #e15104;" text="Professors" textFill="WHITE" toggleGroup="$paneToggle">
+                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#actionProffesors" opacity="0.5" style="-fx-background-color: #FA5A04#FA5A04; -fx-border-color: #e15104;" text="Professors" textFill="WHITE" toggleGroup="$paneToggle">
                            <graphic>
                               <ImageView fitHeight="64.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -944,7 +944,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#changeSubjects" style="-fx-background-color: #F8CA00; -fx-border-color: dfb500;" text="Subjects" textFill="WHITE" toggleGroup="$paneToggle">
+                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#actionSubjects" opacity="0.5" style="-fx-background-color: #F8CA00; -fx-border-color: dfb500;" text="Subjects" textFill="WHITE" toggleGroup="$paneToggle">
                            <graphic>
                               <ImageView fitHeight="64.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -953,7 +953,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#changeLectures" style="-fx-background-color: #C49446#C49446; -fx-border-color: #b6873a;" text="Lectures / classes" textFill="WHITE" toggleGroup="$paneToggle">
+                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#actionLectures" opacity="0.5" style="-fx-background-color: #C49446#C49446; -fx-border-color: #b6873a;" text="Lectures / classes" textFill="WHITE" toggleGroup="$paneToggle">
                            <graphic>
                               <ImageView fitHeight="64.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -962,7 +962,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#changeFaculties" style="-fx-background-color: #7AB317; -fx-border-color: #6b9c14;" text="Faculties / courses" textFill="WHITE" toggleGroup="$paneToggle">
+                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#actionFaculties" opacity="0.5" style="-fx-background-color: #7AB317; -fx-border-color: #6b9c14;" text="Faculties / courses" textFill="WHITE" toggleGroup="$paneToggle">
                            <graphic>
                               <ImageView fitHeight="64.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -971,7 +971,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#changeBuildings" style="-fx-background-color: #B7023F; -fx-border-color: #9e0236;" text="Buildings / rooms" textFill="WHITE" toggleGroup="$paneToggle">
+                        <ToggleButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#actionBuildings" opacity="0.5" style="-fx-background-color: #B7023F; -fx-border-color: #9e0236;" text="Buildings / rooms" textFill="WHITE" toggleGroup="$paneToggle">
                            <graphic>
                               <ImageView fitHeight="64.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
