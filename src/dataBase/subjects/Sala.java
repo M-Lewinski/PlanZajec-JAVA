@@ -1,11 +1,12 @@
 package dataBase.subjects;
 
 import GUI.MessageMenu.Error.ErrorField;
+import dataBase.MySql;
 import dataBase.SqlObject;
 import dataBase.generator.SqlClassGenerator;
+import javafx.scene.paint.Color;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,12 +78,52 @@ public class Sala extends SqlObject {
 
     @Override
     public void deleteObjectFromBase(PreparedStatement stmt) throws SQLException {
-
+        try {
+            stmt.setString(1, this.sala);
+            stmt.setString(2, this.budynek);
+        } catch (SQLException e) {
+            ErrorField.error("Failure while deleting Room from database");
+            throw e;
+        }
     }
 
     @Override
     public String getDeleteSQL() {
-        return null;
+        String SQL = "DELETE FROM Sale WHERE sala = ? AND budynek = ?";
+        return SQL;
     }
+
+
+    public static List<Sala> getAllObjects() throws SQLException {
+        List<Sala> list = new ArrayList<Sala>();
+        String SQL = "SELECT * FROM Sale";
+        Connection connect = MySql.getInstance().getConnect();
+        try {
+            Statement stmt = connect.createStatement();
+            stmt.executeQuery(SQL);
+            ResultSet rs = stmt.getResultSet();
+            while (rs.next()){
+                list.add(Sala.setValuesFromRS(rs));
+            }
+        } catch (SQLException e){
+            throw e;
+        }
+        return list;
+    }
+
+
+    public static Sala setValuesFromRS(ResultSet rs) throws SQLException {
+        try {
+            String nazwa = rs.getString(1);
+            String building = rs.getString(2);
+            int slots = rs.getInt(3);
+            Sala newSala = new Sala(nazwa,building,slots);
+            return newSala;
+        } catch (SQLException e){
+            throw e;
+        }
+    }
+
+
 }
 

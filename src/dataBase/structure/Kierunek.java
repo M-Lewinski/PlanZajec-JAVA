@@ -96,6 +96,23 @@ public class Kierunek extends SqlObject {
         return list;
     }
 
+    public static List<Kierunek> getAllObjects() throws SQLException{
+        List<Kierunek> list = new ArrayList<Kierunek>();
+        String SQL = "SELECT * FROM Kierunki";
+        Connection connect = MySql.getInstance().getConnect();
+        try {
+            PreparedStatement stmt = connect.prepareStatement(SQL);
+            stmt.execute();
+            ResultSet rs = stmt.getResultSet();
+            while (rs.next()){
+                list.add(Kierunek.setValuesFromRS(rs));
+            }
+        } catch (SQLException e){
+            throw e;
+        }
+        return list;
+    }
+
     public static Kierunek setValuesFromRS(ResultSet rs) throws SQLException{
         try {
             String nazwa = rs.getString(1);

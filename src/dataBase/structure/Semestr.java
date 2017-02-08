@@ -97,4 +97,9 @@ public class Semestr extends SqlObject {
             throw e;
         }
     }
+
+    @Override
+    public String toString() {
+        return Integer.toString(this.numer);
+    }
 }

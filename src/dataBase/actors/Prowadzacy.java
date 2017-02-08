@@ -1,5 +1,6 @@
 package dataBase.actors;
 
+import GUI.MessageMenu.Error.ErrorField;
 import dataBase.MySql;
 import dataBase.generator.SqlClassGenerator;
 import dataBase.subjects.Przedmiot;
@@ -76,6 +77,7 @@ public class Prowadzacy extends Uzytkownik {
             super.deleteObjectFromBase(stmt2);
             stmt2.executeUpdate();
         } catch (SQLException e){
+            ErrorField.error("Failure while deleting Professor from Database");
             throw e;
         }
     }

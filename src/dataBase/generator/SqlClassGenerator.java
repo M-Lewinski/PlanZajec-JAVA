@@ -106,18 +106,14 @@ public class SqlClassGenerator {
 
         try {
             Connection connection = MySql.getInstance().getConnect();
-            String SQL = "SELECT * FROM Kierunki LIMIT  1";
-            PreparedStatement stmt2 = connection.prepareStatement(SQL);
-            ResultSet rs = stmt.executeQuery();
-
-            if(rs.next()){
-                String kierunek = rs.getString(1);
-                String wydzial = rs.getString(2);
+            List<Wydzial> wydzialy = Wydzial.getAllObjects();
+            List<Kierunek> kierunki = Kierunek.getAllObjects(wydzialy.get(0));
+                String kierunek = kierunki.get(0).getNazwa();
+                String wydzial = kierunki.get(0).getNazwa_wydzialu();
                 int grupa = rand.nextInt(5);
                 grupa++;
                 Student newObject = new Student(login,imie,nazwisko,login,kierunek,wydzial,7,grupa);
                 newObject.addObjectToBase(stmt);
-            }
         }catch (SQLException e){
             throw e;
         }

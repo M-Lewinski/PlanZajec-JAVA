@@ -13,6 +13,7 @@ import dataBase.structure.Kierunek;
 import dataBase.structure.Semestr;
 import dataBase.structure.Wydzial;
 import dataBase.subjects.Przedmiot;
+import dataBase.subjects.Sala;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +35,9 @@ public class ControllerAdminMenu extends Controller{
     private List<Przedmiot> subjectsList;
     private List<Prowadzacy> proffesorsList;
     private List<Student> studentsList;
+    private List<Sala> roomsList;
+    private List<Wydzial> facultiesList;
+    private List<Kierunek> coursesList;
 
     @FXML
     public BorderPane students;
@@ -47,10 +51,10 @@ public class ControllerAdminMenu extends Controller{
     public BorderPane faculties;
     @FXML
     public BorderPane buildings;
-
+    @FXML
     public BorderPane currentPane;
 
-
+    @FXML
     public AnchorPane mainPane;
 
     @FXML
@@ -58,9 +62,10 @@ public class ControllerAdminMenu extends Controller{
     @FXML
     public ChoiceBox<SqlObject> subjectCourse;
     @FXML
-    public TextField subjectName;
+    public ChoiceBox<SqlObject> subjectSemester;
+
     @FXML
-    public TextField subjectSemester;
+    public TextField subjectName;
     @FXML
     public ColorPicker subjectColor;
     @FXML
@@ -106,6 +111,27 @@ public class ControllerAdminMenu extends Controller{
     @FXML
     public TableView studentTable;
 
+    @FXML
+    public TextField buildingName;
+    @FXML
+    public TextField roomName;
+    @FXML
+    public TextField roomSpots;
+    @FXML
+    public TableView roomsTable;
+
+
+    @FXML
+    public ChoiceBox<SqlObject> coursesFaculty;
+    @FXML
+    public TextField facultyName;
+    @FXML
+    public TextField courseName;
+    @FXML
+    public TableView facultiesTable;
+    @FXML
+    public TableView coursesTable;
+
 
     private ToggleButton oldToggle;
     public void changePane(BorderPane newBorderPane){
@@ -126,6 +152,14 @@ public class ControllerAdminMenu extends Controller{
     public void actionStudents(ActionEvent event) {
         event.consume();
         this.togglePane(students,event,oldToggle);
+        this.clearChoiceBox(this.studentFaculty);
+        try {
+            this.addChoiceBoxContent(this.studentFaculty,Wydzial.getAllObjects());
+            this.setupStudents();
+        }
+        catch (SQLException e){
+            ErrorField.error("Setup error!");
+        }
     }
     public void actionProffesors(ActionEvent event){
         event.consume();
@@ -152,10 +186,20 @@ public class ControllerAdminMenu extends Controller{
     public void actionFaculties(ActionEvent event){
         event.consume();
         this.togglePane(faculties,event,oldToggle);
+        this.clearChoiceBox(coursesFaculty);
+        try {
+            this.addChoiceBoxContent(this.coursesFaculty,Wydzial.getAllObjects());
+            this.setupFaculties();
+            this.setupCourses();
+        }
+        catch (SQLException e){
+            ErrorField.error("Setup error!");
+        }
     }
     public void actionBuildings(ActionEvent event){
         event.consume();
         this.togglePane(buildings,event,oldToggle);
+        this.setupRooms();
     }
 
     public void togglePane(BorderPane newPane, ActionEvent event,ToggleButton oldToggle){
@@ -199,10 +243,11 @@ public class ControllerAdminMenu extends Controller{
 
     public void createSubject(){
         Kierunek kierunek = (Kierunek) this.subjectCourse.getValue();
+        Semestr semestr = (Semestr) this.subjectSemester.getValue();
         String name = this.subjectName.getText();
         Color c = this.subjectColor.getValue();
-        if (!this.subjectCourse.getSelectionModel().isEmpty() && !name.equals("") && c != null){
-            Przedmiot newPrzedmiot = new Przedmiot(name,kierunek.getNazwa(),kierunek.getNazwa_wydzialu(),c);
+        if (!this.subjectSemester.getSelectionModel().isEmpty() && !name.equals("") && c != null){
+            Przedmiot newPrzedmiot = new Przedmiot(name,kierunek.getNazwa(),kierunek.getNazwa_wydzialu(),semestr.getNumer(),c);
             insertSqlObject(newPrzedmiot);
         }
         else {
@@ -215,9 +260,11 @@ public class ControllerAdminMenu extends Controller{
 
     public void setupPanes(){
         this.addListenerChoiceBox(this.subjectFaculty,this.subjectCourse);
+        this.addListenerChoiceBox(this.subjectCourse,this.subjectSemester);
         TableColumn<Przedmiot,String> sName = new TableColumn("Name");
         TableColumn<Przedmiot,String> sCourse = new TableColumn("Course");
         TableColumn<Przedmiot,String> sFaculty = new TableColumn("Faculty");
+        TableColumn<Przedmiot,String> sSemester = new TableColumn("Semester");
         TableColumn sColor = new TableColumn("Color");
         TableColumn<Przedmiot,String> sRed = new TableColumn("Red");
         TableColumn<Przedmiot,String> sGreen = new TableColumn("Green");
@@ -226,14 +273,16 @@ public class ControllerAdminMenu extends Controller{
         sName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getNazwa()));
         sCourse.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getKierunek()));
         sFaculty.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getWydzial()));
+        sSemester.setCellValueFactory(row -> new SimpleStringProperty((Integer.toString(row.getValue().getSemester()))));
+
 
         sRed.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getRed())));
         sGreen.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getGreen())));
         sBlue.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getBlue())));
-        this.subjectTable.getColumns().addAll(sName,sCourse,sFaculty,sColor);
+        this.subjectTable.getColumns().addAll(sName,sCourse,sFaculty,sSemester,sColor);
 
 
-        TableColumn<Prowadzacy,String> pLogin = new TableColumn("Name");
+        TableColumn<Prowadzacy,String> pLogin = new TableColumn("Login");
         TableColumn<Prowadzacy,String> pTitle = new TableColumn("Title");
         TableColumn<Prowadzacy,String> pName = new TableColumn("Name");
         TableColumn<Prowadzacy,String> pSurName = new TableColumn("Surname");
@@ -242,12 +291,53 @@ public class ControllerAdminMenu extends Controller{
         pName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getImie()));
         pSurName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getNazwisko()));
         this.proffesorTable.getColumns().addAll(pLogin,pTitle,pName,pSurName);
-
-
-
         this.onlyNumber(this.proffesorAmount,0,30);
+
+
+
+        this.addListenerChoiceBox(this.studentFaculty,this.studentCourse);
+        this.addListenerChoiceBox(this.studentCourse,this.studentSemester);
+        TableColumn<Student,String> stLogin = new TableColumn("Login");
+        TableColumn<Student,String> stIndex = new TableColumn("Index");
+        TableColumn<Student,String> stName = new TableColumn("Name");
+        TableColumn<Student,String> stSurName = new TableColumn("Surname");
+        TableColumn<Student,String> stCourse= new TableColumn("Course");
+        TableColumn<Student,String> stFaculty = new TableColumn("Faculty");
+        TableColumn<Student,String> stSemester = new TableColumn("Semester");
+        TableColumn<Student,String> stGroup = new TableColumn("Group");
+        stLogin.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getLogin()));
+        stIndex.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getIndeks())));
+        stName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getImie()));
+        stSurName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getNazwisko()));
+        stCourse.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getKierunek()));
+        stFaculty.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getWydzial()));
+        stSemester.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getSemestr())));
+        stGroup.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getGrupa())));
+        this.studentTable.getColumns().addAll(stLogin,stIndex,stName,stSurName,stCourse,stFaculty,stSemester,stGroup);
+
         this.onlyNumber(this.studentGroup,1,5);
-    };
+        this.onlyNumber(this.studentAmount,0,30);
+
+        TableColumn<Sala,String> bName= new TableColumn("Building");
+        TableColumn<Sala,String> rName= new TableColumn("Room");
+        TableColumn<Sala,String> rSpots= new TableColumn("Number of spots");
+        bName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getBudynek()));
+        rName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getSala()));
+        rSpots.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getLiczba_miejsc())));
+                    this.roomsTable.getColumns().addAll(bName,rName,rSpots);
+
+        this.onlyNumber(this.roomSpots,1,300);
+
+        TableColumn<Wydzial,String> fName= new TableColumn("Name");
+        fName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getNazwa()));
+        this.facultiesTable.getColumns().addAll(fName);
+
+        TableColumn<Kierunek,String> cName = new TableColumn("Name");
+        TableColumn<Kierunek,String> cFaculty = new TableColumn("Faculty name");
+        cName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getNazwa()));
+        cFaculty.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getNazwa_wydzialu()));
+        this.coursesTable.getColumns().addAll(cName,cFaculty);
+    }
 
     public void setupSubjects(){
         try {
@@ -282,6 +372,7 @@ public class ControllerAdminMenu extends Controller{
         Connection connection = MySql.getInstance().getConnect();
         try {
             PreparedStatement stmt = sqlObject.deleteObjectFromBase(connection);
+            stmt.execute();
             connection.commit();
             InfoField.info("Deleting new object was successful");
         }
@@ -370,24 +461,137 @@ public class ControllerAdminMenu extends Controller{
         else {
             WarningField.warning("There are fields which are empty!");
         }
-        this.setupProffesors();
+        this.setupStudents();
     }
 
 
-    public void deleteProfesor(){
-        Prowadzacy prowadzacy = (Prowadzacy) this.proffesorTable.getSelectionModel().getSelectedItem();
-        if(prowadzacy!=null){
-            deleteSqlObject(prowadzacy);
+    public void deleteStudent(){
+        Student student = (Student) this.studentTable.getSelectionModel().getSelectedItem();
+        if(student!=null){
+            deleteSqlObject(student);
         }
-        this.setupProffesors();
+        this.setupStudents();
     }
 
-    public void generateProfessors(){
+    public void generateStudents(){
         Generator generator = new Generator();
-        if(!this.proffesorAmount.equals(""))
-            generator.createSqlObjectsFromFiles(new Prowadzacy(),Integer.parseInt(this.proffesorAmount.getText()),new String[]{"NameList.txt","SurnameList.txt"});
-        this.setupProffesors();
+        if(!this.studentAmount.equals(""))
+            generator.createSqlObjectsFromFiles(new Student(),Integer.parseInt(this.studentAmount.getText()),new String[]{"NameList.txt","SurnameList.txt"});
+        this.setupStudents();
     }
 
+
+    public void setupRooms(){
+        try {
+            this.roomsList = Sala.getAllObjects();
+            setupTable(this.roomsTable,this.roomsList);
+        }
+        catch (SQLException e){
+            ErrorField.error("TableView error");
+        }
+    }
+
+
+    public void createRoom(){
+        String name = this.roomName.getText();
+        String building = this.buildingName.getText();
+        String temp = this.roomSpots.getText();
+        int spots = 0;
+        if (!temp.equals("")){
+            spots = Integer.parseInt(temp);
+        }
+        if (!name.equals("") && !building.equals("") && spots != 0){
+            Sala newSala = new Sala(name,building,spots);
+            insertSqlObject(newSala);
+        }
+        else {
+            WarningField.warning("There are fields which are empty!");
+        }
+        this.setupRooms();
+    }
+
+
+    public void deleteRoom(){
+        Sala sala = (Sala) this.roomsTable.getSelectionModel().getSelectedItem();
+        if(sala!=null){
+            deleteSqlObject(sala);
+        }
+        this.setupRooms();
+    }
+
+    public void setupFaculties(){
+        try {
+            this.facultiesList = Wydzial.getAllObjects();
+            setupTable(this.facultiesTable,this.facultiesList);
+        }
+        catch (SQLException e){
+            ErrorField.error("TableView error");
+        }
+    }
+
+
+    public void createFaculty(){
+        String name = this.facultyName.getText();
+        if (!name.equals("")){
+            Wydzial newWydzial = new Wydzial(name);
+            insertSqlObject(newWydzial);
+        }
+        else {
+            WarningField.warning("There are fields which are empty!");
+        }
+        this.setupFaculties();
+        try {
+
+            this.addChoiceBoxContent(this.subjectFaculty,Wydzial.getAllObjects());
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void deleteFaculty(){
+        Wydzial wydzial = (Wydzial) this.facultiesTable.getSelectionModel().getSelectedItem();
+        if(wydzial!=null){
+            deleteSqlObject(wydzial);
+        }
+        this.setupFaculties();
+    }
+
+
+
+    public void setupCourses(){
+        try {
+            this.coursesList = Kierunek.getAllObjects();
+            setupTable(this.coursesTable,this.coursesList);
+        }
+        catch (SQLException e){
+            ErrorField.error("TableView error");
+        }
+    }
+
+
+    public void createCourses(){
+        String name = this.courseName.getText();
+        Wydzial wydzial = (Wydzial) this.coursesFaculty.getSelectionModel().getSelectedItem();
+        if (!name.equals("") && !this.coursesFaculty.getSelectionModel().isEmpty()){
+            Wydzial newWydzial = new Wydzial(name);
+            insertSqlObject(newWydzial);
+        }
+        else {
+            WarningField.warning("There are fields which are empty!");
+        }
+        this.setupCourses();
+    }
+
+
+    public void deleteCourses(){
+        Kierunek kierunek = (Kierunek) this.coursesTable.getSelectionModel().getSelectedItem();
+        if(kierunek!=null){
+            deleteSqlObject(kierunek);
+        }
+        this.setupCourses();
+    }
 
 }

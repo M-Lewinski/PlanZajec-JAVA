@@ -1,5 +1,6 @@
 package dataBase.actors;
 
+import GUI.MessageMenu.Error.ErrorField;
 import dataBase.MySql;
 import dataBase.generator.SqlClassGenerator;
 
@@ -14,6 +15,8 @@ public class Student extends Uzytkownik {
     private int semestr;
     private int grupa;
     private int indeks;
+
+    public Student(){};
 
     public Student(String login, String imie, String nazwisko, String haslo, String kierunek,String wydzial, int semestr, int grupa) {
         super(login, imie, nazwisko, haslo);
@@ -64,6 +67,10 @@ public class Student extends Uzytkownik {
         this.indeks = indeks;
     }
 
+    public String getWydzial() {
+        return wydzial;
+    }
+
     @Override
     public void addObjectToBase(PreparedStatement stmt) throws SQLException {
         try {
@@ -92,7 +99,7 @@ public class Student extends Uzytkownik {
 
     @Override
     public String getInsertSQL() {
-        String SQL = "INSERT INTO Studenci " +
+        String SQL = "INSERT INTO Studenci (login,kierunek,wydzial,semestr,grupa) " +
                 "VALUES(?,?,?,?,?)";
         return SQL;
     }
@@ -106,6 +113,7 @@ public class Student extends Uzytkownik {
             super.deleteObjectFromBase(stmt2);
             stmt2.executeUpdate();
         } catch (SQLException e) {
+            ErrorField.error("Failure while deleting Student from Database!");
             throw e;
         }
     }

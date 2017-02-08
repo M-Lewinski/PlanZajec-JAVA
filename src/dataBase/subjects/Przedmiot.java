@@ -16,6 +16,7 @@ public class Przedmiot extends SqlObject {
     private String nazwa;
     private String kierunek;
     private String wydzial;
+    private int semester;
     private Color color;
 
     public String getNazwa() {
@@ -34,11 +35,12 @@ public class Przedmiot extends SqlObject {
         this.kierunek = kierunek;
     }
 
-    public Przedmiot(String nazwa, String kierunek,String wydzial, Color color) {
+    public Przedmiot(String nazwa, String kierunek,String wydzial,int semester, Color color) {
         this.nazwa = nazwa;
         this.kierunek = kierunek;
         this.wydzial = wydzial;
         this.color = color;
+        this.semester = semester;
     }
 
     @Override
@@ -47,9 +49,10 @@ public class Przedmiot extends SqlObject {
             this.setValueSQL(stmt,1,this.nazwa);
             this.setValueSQL(stmt, 2, this.kierunek);
             this.setValueSQL(stmt, 3, this.wydzial);
-            this.setValueSQL(stmt, 4, this.getRed());
-            this.setValueSQL(stmt, 5, this.getGreen());
-            this.setValueSQL(stmt, 6, this.getBlue());
+            this.setValueSQL(stmt, 4, this.semester);
+            this.setValueSQL(stmt, 5, this.getRed());
+            this.setValueSQL(stmt, 6, this.getGreen());
+            this.setValueSQL(stmt, 7, this.getBlue());
         } catch (SQLException e) {
             ErrorField.error("Failure while inserting new subject to database");
             throw e;
@@ -69,6 +72,10 @@ public class Przedmiot extends SqlObject {
         String SQL = "INSERT INTO Przedmioty " +
                 "VALUES(?,?,?,?,?,?,?)";
         return SQL;
+    }
+
+    public int getSemester() {
+        return semester;
     }
 
     public int getGreen(){
@@ -111,11 +118,12 @@ public class Przedmiot extends SqlObject {
             String nazwa = rs.getString(1);
             String kierunek = rs.getString(2);
             String wydzial = rs.getString(3);
-            int red = rs.getInt(4);
-            int green = rs.getInt(5);
-            int blue = rs.getInt(6);
+            int semester = rs.getInt(4);
+            int red = rs.getInt(5);
+            int green = rs.getInt(6);
+            int blue = rs.getInt(7);
             Color color = new Color(red/255.0,green/255.0,blue/255.0,1.0);
-            Przedmiot newPrzedmiot = new Przedmiot(nazwa,kierunek,wydzial,color);
+            Przedmiot newPrzedmiot = new Przedmiot(nazwa,kierunek,wydzial,semester,color);
             return newPrzedmiot;
         } catch (SQLException e){
             throw e;
