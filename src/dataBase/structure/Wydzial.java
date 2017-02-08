@@ -53,6 +53,22 @@ public class Wydzial extends SqlObject {
     }
 
     @Override
+    public String getDeleteSQL() {
+        String SQL = "DELETE FROM Wydzialy WHERE name = ?";
+        return SQL;
+    }
+
+    @Override
+    public void deleteObjectFromBase(PreparedStatement stmt) throws SQLException {
+        try {
+            stmt.setString(1, this.nazwa);
+        } catch (SQLException e) {
+            System.err.println("BLAD W Tworzeniu");
+            throw e;
+        }
+    }
+
+    @Override
     public List<? extends SqlObject> getRelatedObjects() throws SQLException {
         return Kierunek.getAllObjects(this);
     }

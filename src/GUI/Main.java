@@ -26,7 +26,7 @@ public class Main extends Application {
         try {
             Main.loader = new FXMLLoader();
             Main.loader.setLocation(Main.class.getResource(resource));
-            Main.rootLayout = Main.loader.load();
+             Main.rootLayout = Main.loader.load();
             Main.controller = Main.loader.getController();
 
             double oldWidth = Main.currentPrimaryStage.getWidth();

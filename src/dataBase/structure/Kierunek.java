@@ -62,6 +62,22 @@ public class Kierunek extends SqlObject {
         return SQL;
     }
 
+    @Override
+    public void deleteObjectFromBase(PreparedStatement stmt) throws SQLException {
+        try {
+            this.addObjectToBase(stmt);
+        }
+        catch (SQLException e){
+            throw e;
+        }
+    }
+
+    @Override
+    public String getDeleteSQL() {
+        String SQL = "DELETE FROM Kierunki WHERE nazwa = ? AND nazwa_wydzialu = ?";
+        return SQL;
+    }
+
     public static List<Kierunek> getAllObjects(Wydzial wydzial) throws SQLException{
         List<Kierunek> list = new ArrayList<Kierunek>();
         String SQL = "SELECT * FROM Kierunki k WHERE k.nazwa_wydzialu = ?";
@@ -94,5 +110,10 @@ public class Kierunek extends SqlObject {
     @Override
     public String toString() {
         return this.nazwa;
+    }
+
+    @Override
+    public List<? extends SqlObject> getRelatedObjects() throws SQLException {
+        return Semestr.getAllObjects();
     }
 }

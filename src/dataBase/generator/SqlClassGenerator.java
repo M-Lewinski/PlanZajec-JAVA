@@ -1,12 +1,16 @@
 package dataBase.generator;
 
+import dataBase.MySql;
 import dataBase.actors.Prowadzacy;
+import dataBase.actors.Student;
 import dataBase.structure.Kierunek;
 import dataBase.structure.Semestr;
 import dataBase.structure.Wydzial;
 import dataBase.subjects.Sala;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,12 +83,44 @@ public class SqlClassGenerator {
         String imie =data.get(0).get(index);
         index = rand.nextInt(data.get(1).size());
         String nazwisko = data.get(1).get(index);
-        String login = Character.toString(Character.toLowerCase(imie.charAt(0)))+Character.toString(Character.toLowerCase(nazwisko.charAt(0)));
+
+        String login = Character.toString(Character.toLowerCase(imie.charAt(0)))+Character.toString(Character.toLowerCase(nazwisko.charAt(0)))+Integer.toString(rand.nextInt(2000));
         Prowadzacy newObject = new Prowadzacy(login,imie,nazwisko,login);
+        prowadzacy.setTytul("mgr inż.");
         try {
             newObject.addObjectToBase(stmt);
         }catch (SQLException e){
             throw e;
         }
     }
+
+    public void generate(Student student, List<ArrayList<String>> data, PreparedStatement stmt, int i) throws SQLException {
+        if(!check(data,stmt)) return;
+        Random rand = new Random();
+        int index = rand.nextInt(data.get(0).size());
+        String imie =data.get(0).get(index);
+        index = rand.nextInt(data.get(1).size());
+        String nazwisko = data.get(1).get(index);
+
+        String login = Character.toString(Character.toLowerCase(imie.charAt(0)))+Character.toString(Character.toLowerCase(nazwisko.charAt(0)))+Integer.toString(rand.nextInt(2000));
+
+        try {
+            Connection connection = MySql.getInstance().getConnect();
+            String SQL = "SELECT * FROM Kierunki LIMIT  1";
+            PreparedStatement stmt2 = connection.prepareStatement(SQL);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                String kierunek = rs.getString(1);
+                String wydzial = rs.getString(2);
+                int grupa = rand.nextInt(5);
+                grupa++;
+                Student newObject = new Student(login,imie,nazwisko,login,kierunek,wydzial,7,grupa);
+                newObject.addObjectToBase(stmt);
+            }
+        }catch (SQLException e){
+            throw e;
+        }
+    }
+
 }

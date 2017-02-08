@@ -67,7 +67,7 @@ public class Przedmiot extends SqlObject {
     @Override
     public String getInsertSQL() {
         String SQL = "INSERT INTO Przedmioty " +
-                "VALUES(?,?,?,?,?,?)";
+                "VALUES(?,?,?,?,?,?,?)";
         return SQL;
     }
 
@@ -124,5 +124,21 @@ public class Przedmiot extends SqlObject {
 
     public String getWydzial() {
         return wydzial;
+    }
+
+    @Override
+    public void deleteObjectFromBase(PreparedStatement stmt) throws SQLException {
+        try {
+        this.setValueSQL(stmt,1,this.nazwa);
+    } catch (SQLException e) {
+        ErrorField.error("Failure while deleting subject from database");
+        throw e;
+    }
+    }
+
+    @Override
+    public String getDeleteSQL() {
+        String SQL = "DELETE FROM Przedmioty WHERE nazwa = ?";
+    return SQL;
     }
 }

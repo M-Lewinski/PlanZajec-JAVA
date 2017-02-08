@@ -6,18 +6,19 @@ import GUI.MessageMenu.Info.InfoField;
 import GUI.MessageMenu.Warning.WarningField;
 import dataBase.MySql;
 import dataBase.SqlObject;
+import dataBase.actors.Prowadzacy;
+import dataBase.actors.Student;
+import dataBase.generator.Generator;
 import dataBase.structure.Kierunek;
+import dataBase.structure.Semestr;
 import dataBase.structure.Wydzial;
 import dataBase.subjects.Przedmiot;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -31,6 +32,8 @@ import java.util.List;
 public class ControllerAdminMenu extends Controller{
 
     private List<Przedmiot> subjectsList;
+    private List<Prowadzacy> proffesorsList;
+    private List<Student> studentsList;
 
     @FXML
     public BorderPane students;
@@ -57,11 +60,52 @@ public class ControllerAdminMenu extends Controller{
     @FXML
     public TextField subjectName;
     @FXML
+    public TextField subjectSemester;
+    @FXML
     public ColorPicker subjectColor;
     @FXML
     public Button subjectSave;
     @FXML
     public TableView subjectTable;
+
+
+    @FXML
+    public TextField professorLogin;
+    @FXML
+    public PasswordField professorPassword;
+    @FXML
+    public TextField professorName;
+    @FXML
+    public TextField professorSurname;
+    @FXML
+    public TextField professorTitle;
+    @FXML
+    public TextField proffesorAmount;
+    @FXML
+    public TableView proffesorTable;
+
+
+    @FXML
+    public ChoiceBox<SqlObject> studentFaculty;
+    @FXML
+    public ChoiceBox<SqlObject> studentCourse;
+    @FXML
+    public ChoiceBox<SqlObject> studentSemester;
+    @FXML
+    public TextField studentLogin;
+    @FXML
+    public PasswordField studentPassword;
+    @FXML
+    public TextField studentName;
+    @FXML
+    public TextField studentSurname;
+    @FXML
+    public TextField studentAmount;
+    @FXML
+    public TextField studentGroup;
+    @FXML
+    public TableView studentTable;
+
 
     private ToggleButton oldToggle;
     public void changePane(BorderPane newBorderPane){
@@ -86,6 +130,7 @@ public class ControllerAdminMenu extends Controller{
     public void actionProffesors(ActionEvent event){
         event.consume();
         this.togglePane(proffesors,event,oldToggle);
+        this.setupProffesors();
     }
     public void actionSubjects(ActionEvent event){
         event.consume();
@@ -122,39 +167,34 @@ public class ControllerAdminMenu extends Controller{
 
     private void insertSqlObject(SqlObject sqlObject) {
         Connection connection = MySql.getInstance().getConnect();
-        Savepoint save = null;
         try {
-            save = connection.setSavepoint("INSERT");
-            PreparedStatement lock = connection.prepareStatement("LOCK TABLES Przedmioty WRITE");
-            lock.execute();
             PreparedStatement stmt = sqlObject.addObjectToBase(connection);
             stmt.execute();
-            PreparedStatement unlock = connection.prepareStatement("UNLOCK TABLES");
-            unlock.execute();
             connection.commit();
-            InfoField.info("Inserting new subject was successful");
+            InfoField.info("Inserting new object was successful");
         }
         catch (SQLException e){
-            if(save!=null){
+//            if(save!=null){
                 try {
-                    connection.rollback(save);
+                    connection.rollback();
                 }
                 catch (SQLException err){
                     err.printStackTrace();
                 }
-            }
+//            }
             ErrorField.error("Failure! Duplicate entry for Primary Key");
+            e.printStackTrace();
         }
-        finally {
-            if(save!=null){
-                try {
-                    connection.releaseSavepoint(save);
-                }
-                catch (SQLException e){
-                    ErrorField.error("SAVEPOINT FAILURE");
-                }
-            }
-        }
+//        finally {
+//            if(save!=null){
+//                try {
+//                    connection.releaseSavepoint(save);
+//                }
+//                catch (SQLException e){
+//                    ErrorField.error("SAVEPOINT FAILURE");
+//                }
+//            }
+//        }
     }
 
     public void createSubject(){
@@ -191,6 +231,22 @@ public class ControllerAdminMenu extends Controller{
         sGreen.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getGreen())));
         sBlue.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getBlue())));
         this.subjectTable.getColumns().addAll(sName,sCourse,sFaculty,sColor);
+
+
+        TableColumn<Prowadzacy,String> pLogin = new TableColumn("Name");
+        TableColumn<Prowadzacy,String> pTitle = new TableColumn("Title");
+        TableColumn<Prowadzacy,String> pName = new TableColumn("Name");
+        TableColumn<Prowadzacy,String> pSurName = new TableColumn("Surname");
+        pLogin.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getLogin()));
+        pTitle.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getTytul()));
+        pName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getImie()));
+        pSurName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getNazwisko()));
+        this.proffesorTable.getColumns().addAll(pLogin,pTitle,pName,pSurName);
+
+
+
+        this.onlyNumber(this.proffesorAmount,0,30);
+        this.onlyNumber(this.studentGroup,1,5);
     };
 
     public void setupSubjects(){
@@ -208,5 +264,130 @@ public class ControllerAdminMenu extends Controller{
         if(!data .isEmpty()){
             table.setItems(data);
         }
+        else {
+            table.getSelectionModel().clearSelection();
+            table.getItems().clear();
+        }
     }
+
+    public void deleteSubject(){
+        Przedmiot przedmiot = (Przedmiot) this.subjectTable.getSelectionModel().getSelectedItem();
+        if(przedmiot!=null){
+            deleteSqlObject(przedmiot);
+        }
+        this.setupSubjects();
+    }
+
+    public void deleteSqlObject(SqlObject sqlObject){
+        Connection connection = MySql.getInstance().getConnect();
+        try {
+            PreparedStatement stmt = sqlObject.deleteObjectFromBase(connection);
+            connection.commit();
+            InfoField.info("Deleting new object was successful");
+        }
+        catch (SQLException e){
+                try {
+                    connection.rollback();
+                }
+                catch (SQLException err){
+                    err.printStackTrace();
+                }
+            e.printStackTrace();
+        }
+    }
+
+    public void setupProffesors(){
+        try {
+            this.proffesorsList = Prowadzacy.getAllObjects();
+            setupTable(this.proffesorTable,this.proffesorsList);
+        }
+        catch (SQLException e){
+            ErrorField.error("TableView error");
+        }
+    }
+
+
+    public void createProfesor(){
+        String name = this.professorName.getText();
+        String surname = this.professorSurname.getText();
+        String title = this.professorTitle.getText();
+        String login = this.professorLogin.getText();
+        String password = this.professorPassword.getText();
+        if (!name.equals("") && !surname.equals("") && !login.equals("") && !password.equals("")){
+            Prowadzacy newProwadzacy= new Prowadzacy(login,name,surname,password);
+            insertSqlObject(newProwadzacy);
+        }
+        else {
+            WarningField.warning("There are fields which are empty!");
+        }
+        this.setupProffesors();
+    }
+
+
+    public void deleteProfesor(){
+        Prowadzacy prowadzacy = (Prowadzacy) this.proffesorTable.getSelectionModel().getSelectedItem();
+        if(prowadzacy!=null){
+            deleteSqlObject(prowadzacy);
+        }
+        this.setupProffesors();
+    }
+
+    public void generateProfessors(){
+        Generator generator = new Generator();
+        if(!this.proffesorAmount.equals(""))
+            generator.createSqlObjectsFromFiles(new Prowadzacy(),Integer.parseInt(this.proffesorAmount.getText()),new String[]{"NameList.txt","SurnameList.txt"});
+        this.setupProffesors();
+    }
+
+
+    public void setupStudents(){
+        try {
+            this.studentsList= Student.getAllObjects();
+            setupTable(this.studentTable,this.studentsList);
+        }
+        catch (SQLException e){
+            ErrorField.error("TableView error");
+        }
+    }
+
+
+    public void createStudent(){
+        String login = this.studentLogin.getText();
+        String password = this.studentPassword.getText();
+        String name = this.studentName.getText();
+        String surname = this.studentSurname.getText();
+        Kierunek kierunek = (Kierunek) this.studentCourse.getSelectionModel().getSelectedItem();
+        Semestr semestr = (Semestr) this.studentSemester.getSelectionModel().getSelectedItem();
+        String temp = this.studentGroup.getText();
+        int group = 0;
+        if(!temp.equals("")){
+            group = Integer.parseInt(temp);
+        }
+        if (group != 0 && !name.equals("") && !surname.equals("") && !login.equals("") && !password.equals("") && !this.studentSemester.getSelectionModel().isEmpty()){
+            Student newStudent= new Student(login,name,surname,"",kierunek.getNazwa(),kierunek.getNazwa_wydzialu(),semestr.getNumer(),group);
+            insertSqlObject(newStudent);
+        }
+        else {
+            WarningField.warning("There are fields which are empty!");
+        }
+        this.setupProffesors();
+    }
+
+
+    public void deleteProfesor(){
+        Prowadzacy prowadzacy = (Prowadzacy) this.proffesorTable.getSelectionModel().getSelectedItem();
+        if(prowadzacy!=null){
+            deleteSqlObject(prowadzacy);
+        }
+        this.setupProffesors();
+    }
+
+    public void generateProfessors(){
+        Generator generator = new Generator();
+        if(!this.proffesorAmount.equals(""))
+            generator.createSqlObjectsFromFiles(new Prowadzacy(),Integer.parseInt(this.proffesorAmount.getText()),new String[]{"NameList.txt","SurnameList.txt"});
+        this.setupProffesors();
+    }
+
+
 }

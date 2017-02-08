@@ -2,12 +2,15 @@ package GUI;
 
 import GUI.MessageMenu.Error.ErrorField;
 import dataBase.SqlObject;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
@@ -90,6 +93,27 @@ public class Controller {
     public void clearChoiceBox(ChoiceBox<SqlObject> choiceBox){
         choiceBox.getSelectionModel().clearSelection();
         choiceBox.getItems().clear();
+    }
+
+    public void onlyNumber(TextField textField, int rangeLeft, int rangeRight){
+        textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    textField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+                if(!textField.getText().equals("")){
+                    int value = Integer.parseInt(textField.getText());
+                    if (value > rangeRight){
+                        value = rangeRight;
+                    }
+                    if (value < rangeLeft){
+                        value = rangeLeft;
+                    }
+                    textField.setText(Integer.toString(value));
+                }
+            }
+        });
     }
 //    public void facultyCellFactory(ChoiceBox choiceBox){
 //    }

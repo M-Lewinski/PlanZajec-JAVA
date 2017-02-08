@@ -74,5 +74,15 @@ public class Sala extends SqlObject {
                 "VALUES(?,?,?)";
         return SQL;
     }
+
+    @Override
+    public void deleteObjectFromBase(PreparedStatement stmt) throws SQLException {
+
+    }
+
+    @Override
+    public String getDeleteSQL() {
+        return null;
+    }
 }
 

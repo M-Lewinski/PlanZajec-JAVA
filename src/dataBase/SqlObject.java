@@ -24,7 +24,21 @@ public abstract class SqlObject {
         }
     }
 
+
+    public abstract void deleteObjectFromBase(PreparedStatement stmt) throws SQLException;
+
+    public PreparedStatement deleteObjectFromBase(Connection connection) throws SQLException {
+        try {
+            PreparedStatement stmt = connection.prepareStatement(this.getDeleteSQL());
+            deleteObjectFromBase(stmt);
+            return stmt;
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
     public abstract String getInsertSQL();
+    public abstract String getDeleteSQL();
 
 //    public void setInsertSQL(String insertSQL) {
 //        this.insertSQL = insertSQL;

@@ -120,9 +120,39 @@ public abstract class Uzytkownik extends SqlObject {
     }
 
     @Override
+    public void deleteObjectFromBase(PreparedStatement stmt) throws SQLException {
+        try {
+            stmt.setString(1, this.login);
+            this.deleteUser();
+        } catch (SQLException e) {
+            System.err.println("Failure while deleting user");
+            throw e;
+        }
+    }
+
+    @Override
+    public String getDeleteSQL() {
+        String SQL = "DELETE FROM Uzytkownicy WHERE login = ?";
+        return SQL;
+    }
+
+    @Override
     public String getInsertSQL() {
         String SQL = "INSERT INTO Uzytkownicy " +
                 "VALUES(?,?,?,?)";
         return SQL;
+    }
+
+    public void deleteUser() throws SQLException{
+        String SQL = "DROP USER ?@?";
+        Connection connect = MySql.getInstance().getConnect();
+        try (PreparedStatement stmt = connect.prepareStatement(SQL);) {
+            stmt.setString(1,this.login);
+            stmt.setString(2,this.host);
+            stmt.execute();
+        }
+        catch (SQLException e){
+            throw e;
+        }
     }
 }
