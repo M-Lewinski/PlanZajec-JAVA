@@ -1,5 +1,6 @@
 package GUI;
 
+import GUI.MessageMenu.Error.ErrorField;
 import dataBase.SqlObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,12 +8,12 @@ import javafx.event.Event;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class Controller {
@@ -59,28 +60,38 @@ public class Controller {
         return newToggle;
     }
 
-    public void addChoiceBoxContent(ChoiceBox choiceBox, List<String> list){
-        ObservableList<String> obsList = FXCollections.observableArrayList(list);
+    public void addChoiceBoxContent(ChoiceBox<SqlObject> choiceBox, List<? extends SqlObject> list){
+        ObservableList<SqlObject> obsList = FXCollections.observableArrayList(list);
 //        obsList.add(0,"");
         choiceBox.setItems(obsList);
     }
-    public void addListenerChoiceBox(ComboBox<SqlObject> mainChoice, ComboBox<SqlObject> subChoice){
+    public void addListenerChoiceBox(ChoiceBox<SqlObject> mainChoice, ChoiceBox<SqlObject> subChoice){
 //        System.out.println("HEJ!");
         mainChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (mainChoice.getSelectionModel().getSelectedItem() == null){
-                subChoice.getSelectionModel().clearSelection();
-                subChoice.getItems().clear();
+                this.clearChoiceBox(subChoice);
                 subChoice.setDisable(true);
             }
             else if (newValue != oldValue && newValue != null){
-                subChoice.getSelectionModel().clearSelection();
-                subChoice.getItems().clear();
-                subChoice.setDisable(false);
+                try {
+                    this.clearChoiceBox(subChoice);
+                    List<? extends SqlObject> list = mainChoice.getValue().getRelatedObjects();
+                    this.addChoiceBoxContent(subChoice,list);
+                    subChoice.setDisable(false);
+                }
+                catch (SQLException e){
+                    ErrorField.error("Failure while loading related objects");
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    public void facultyCellFactory(ChoiceBox choiceBox){
+    public void clearChoiceBox(ChoiceBox<SqlObject> choiceBox){
+        choiceBox.getSelectionModel().clearSelection();
+        choiceBox.getItems().clear();
     }
+//    public void facultyCellFactory(ChoiceBox choiceBox){
+//    }
 }
 

@@ -53,22 +53,9 @@ public class Wydzial extends SqlObject {
     }
 
     @Override
-    public List<String> getRelatedNames() throws SQLException{
-        List<String> names = new ArrayList<String>();
-        String SQL = "SELECT nazwa FROM Kierunki WHERE nazwa_wydzialu = ?";
-        Connection connect = MySql.getInstance().getConnect();
-        try {
-            PreparedStatement stmt = connect.prepareStatement(SQL);
-            setValueSQL(stmt,1,nazwa);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()){
-                names.add(rs.getString(1));
-            }
-        } catch (SQLException e){
-            throw e;
-        }
-        return names;
-    };
+    public List<? extends SqlObject> getRelatedObjects() throws SQLException {
+        return Kierunek.getAllObjects(this);
+    }
 
     public static List<Wydzial> getAllObjects() throws SQLException {
         List<Wydzial> list = new ArrayList<Wydzial>();
@@ -95,5 +82,10 @@ public class Wydzial extends SqlObject {
         } catch (SQLException e){
             throw e;
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.nazwa;
     }
 }

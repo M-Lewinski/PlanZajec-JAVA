@@ -1,5 +1,6 @@
 package dataBase.subjects;
 
+import GUI.MessageMenu.Error.ErrorField;
 import dataBase.SqlObject;
 import dataBase.generator.SqlClassGenerator;
 
@@ -53,7 +54,7 @@ public class Sala extends SqlObject {
             stmt.setString(2, this.budynek);
             stmt.setInt(3, this.liczba_miejsc);
         } catch (SQLException e) {
-            System.err.println("BLAD W Tworzeniu");
+            ErrorField.error("Failure while inserting new Rooms to database");
             throw e;
         }
     }

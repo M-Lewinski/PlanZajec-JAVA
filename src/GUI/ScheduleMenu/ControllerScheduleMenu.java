@@ -77,21 +77,21 @@ public class ControllerScheduleMenu extends Controller{
     }
     @FXML
     public void initialize(){
+        this.schedule.getChildren().add(this.subjectBoxes);
+        this.setZooming();
+        this.setDragging();
+        this.mainSchedule.fire();
+        this.setupButtons();
 //        this.setMessageLayout(this.mainPane);
 //        if(Main.getRefresher()!=null){
 //            Main.getRefresher().createStatusLabel(this.mainPane);
 //        }
 //        this.testPane = new StackPane(this.subjectBoxes);
-        this.schedule.getChildren().add(this.subjectBoxes);
-        this.setZooming();
-        this.setDragging();
-        this.mainSchedule.fire();
-        ArrayList<String> test = new ArrayList<>();
-        test.add("aad");
-        test.add("test");
-        this.addChoiceBoxContent(faculty,test);
+//        ArrayList<String> test = new ArrayList<>();
+//        test.add("aad");
+//        test.add("test");
+//        this.addChoiceBoxContent(faculty,test);
 //        this.addListenerChoiceBox(faculty,course);
-        this.setupButtons();
     }
 
     private void setZooming(){

@@ -61,6 +61,10 @@ public abstract class SqlObject {
             stmt.setDate(position,date);
     }
 
-    public List<String> getRelatedNames() throws SQLException {return null;};
+    public List<? extends SqlObject> getRelatedObjects() throws SQLException {return null;};
+
+    public String toString(){
+        return null;
+    };
 
 }

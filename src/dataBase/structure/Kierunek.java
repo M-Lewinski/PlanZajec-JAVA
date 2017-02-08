@@ -1,10 +1,10 @@
 package dataBase.structure;
 
+import dataBase.MySql;
 import dataBase.SqlObject;
 import dataBase.generator.SqlClassGenerator;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,5 +60,39 @@ public class Kierunek extends SqlObject {
         String SQL = "INSERT INTO Kierunki " +
                 "VALUES(?,?)";
         return SQL;
+    }
+
+    public static List<Kierunek> getAllObjects(Wydzial wydzial) throws SQLException{
+        List<Kierunek> list = new ArrayList<Kierunek>();
+        String SQL = "SELECT * FROM Kierunki k WHERE k.nazwa_wydzialu = ?";
+        Connection connect = MySql.getInstance().getConnect();
+        try {
+            PreparedStatement stmt = connect.prepareStatement(SQL);
+            stmt.setString(1,wydzial.getNazwa());
+            stmt.execute();
+            ResultSet rs = stmt.getResultSet();
+            while (rs.next()){
+                list.add(Kierunek.setValuesFromRS(rs));
+            }
+        } catch (SQLException e){
+            throw e;
+        }
+        return list;
+    }
+
+    public static Kierunek setValuesFromRS(ResultSet rs) throws SQLException{
+        try {
+            String nazwa = rs.getString(1);
+            String nazwa_wydzialu = rs.getString(2);
+            Kierunek newKierunek = new Kierunek(nazwa,nazwa_wydzialu);
+            return newKierunek;
+        } catch (SQLException e){
+            throw e;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.nazwa;
     }
 }

@@ -1,5 +1,6 @@
 package dataBase.generator;
 
+import GUI.MessageMenu.Error.ErrorField;
 import dataBase.MySql;
 import dataBase.SqlObject;
 
@@ -71,7 +72,8 @@ public class Generator {
             stmt.executeBatch();
             connect.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            ErrorField.error("Failure! Duplicate Entry for Primary Key");
             try {
                 if (save != null) {
                     connect.rollback(save);
