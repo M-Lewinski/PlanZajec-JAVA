@@ -54,7 +54,7 @@ public class Wydzial extends SqlObject {
 
     @Override
     public String getDeleteSQL() {
-        String SQL = "DELETE FROM Wydzialy WHERE name = ?";
+        String SQL = "DELETE FROM Wydzialy WHERE nazwa = ?";
         return SQL;
     }
 

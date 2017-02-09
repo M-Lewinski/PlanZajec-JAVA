@@ -91,6 +91,9 @@ public abstract class Uzytkownik extends SqlObject {
                     "GRANT SELECT ON Studenci TO ?@?",
                     "GRANT SELECT ON Prowadzacy TO ?@?",
                     "GRANT SELECT ON Miejsca TO ?@?",
+                    "GRANT EXECUTE ON FUNCTION PlanZajec.userName TO ?@?",
+                    "GRANT EXECUTE ON FUNCTION PlanZajec.checkStudent TO ?@?",
+                    "GRANT EXECUTE ON FUNCTION PlanZajec.checkProfessor TO ?@?"
             };
             this.grantPrivilages(connect, SQLs);
         } catch (SQLException e) {

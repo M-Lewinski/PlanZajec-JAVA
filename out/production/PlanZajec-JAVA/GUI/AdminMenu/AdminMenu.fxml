@@ -659,7 +659,7 @@
                                     </AnchorPane>
                                  </top>
                               </BorderPane>
-                              <BorderPane fx:id="faculties">
+                              <BorderPane fx:id="faculties" visible="false">
                                  <center>
                                     <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                        <children>
@@ -688,7 +688,7 @@
                                                                         <Group GridPane.rowIndex="1">
                                                                            <children>
                                                                               <Label layoutY="5.0" text="name:" />
-                                                                              <TextField layoutX="73.0" prefHeight="26.0" prefWidth="189.0" />
+                                                                              <TextField fx:id="facultyName" layoutX="73.0" prefHeight="26.0" prefWidth="189.0" />
                                                                            </children>
                                                                         </Group>
                                                                      </children>
@@ -697,7 +697,7 @@
                                                             </AnchorPane>
                                                             <AnchorPane prefHeight="41.0" prefWidth="295.0">
                                                                <children>
-                                                                  <Button layoutX="88.0" layoutY="8.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="189.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Save" textFill="WHITE">
+                                                                  <Button layoutX="88.0" layoutY="8.0" mnemonicParsing="false" onAction="#createFaculty" prefHeight="26.0" prefWidth="189.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Save" textFill="WHITE">
                                                                      <graphic>
                                                                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0">
                                                                            <image>
@@ -723,7 +723,7 @@
                                                                         <Group GridPane.rowIndex="1">
                                                                            <children>
                                                                               <Label layoutY="5.0" text="Faculty:" />
-                                                                              <ChoiceBox layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                              <ChoiceBox fx:id="coursesFaculty" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
                                                                            </children>
                                                                         </Group>
                                                                         <Label text="Course">
@@ -734,7 +734,7 @@
                                                                         <Group GridPane.rowIndex="2">
                                                                            <children>
                                                                               <Label layoutY="5.0" text="Name:" />
-                                                                              <TextField layoutX="73.0" prefHeight="26.0" prefWidth="189.0" />
+                                                                              <TextField fx:id="courseName" layoutX="73.0" prefHeight="26.0" prefWidth="189.0" />
                                                                            </children>
                                                                         </Group>
                                                                      </children>
@@ -743,7 +743,7 @@
                                                             </AnchorPane>
                                                             <AnchorPane prefHeight="41.0" prefWidth="295.0">
                                                                <children>
-                                                                  <Button layoutX="88.0" layoutY="8.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="189.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Save" textFill="WHITE">
+                                                                  <Button layoutX="88.0" layoutY="8.0" mnemonicParsing="false" onAction="#createCourses" prefHeight="26.0" prefWidth="189.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Save" textFill="WHITE">
                                                                      <graphic>
                                                                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0">
                                                                            <image>
@@ -766,7 +766,7 @@
                                                          </columnConstraints>
                                                          <rowConstraints>
                                                             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                          </rowConstraints>
                                                          <children>
                                                             <BorderPane prefHeight="0.0" prefWidth="295.0">
@@ -775,7 +775,7 @@
                                                                      <children>
                                                                         <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="567.0" prefWidth="295.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                            <content>
-                                                                              <TableView fx:id="subjectTable4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="592.0" prefWidth="293.0">
+                                                                              <TableView fx:id="facultiesTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="592.0" prefWidth="293.0">
                                                                                  <columnResizePolicy>
                                                                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                                                  </columnResizePolicy>
@@ -789,7 +789,7 @@
                                                                   <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: #373a3c;" BorderPane.alignment="CENTER">
                                                                      <children>
                                                                         <Label layoutX="14.0" layoutY="10.0" text="In database" textFill="WHITE" />
-                                                                        <Button fx:id="subjectSave14" layoutX="106.0" layoutY="4.0" mnemonicParsing="false" onAction="#createSubject" prefHeight="26.0" prefWidth="92.0" style="-fx-background-color: d9534f;" text="Delete" textFill="WHITE">
+                                                                        <Button fx:id="subjectSave14" layoutX="106.0" layoutY="4.0" mnemonicParsing="false" onAction="#deleteFaculty" prefHeight="26.0" prefWidth="92.0" style="-fx-background-color: d9534f;" text="Delete" textFill="WHITE">
                                                                            <graphic>
                                                                               <ImageView fitHeight="32.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0">
                                                                                  <image>
@@ -802,13 +802,13 @@
                                                                   </AnchorPane>
                                                                </top>
                                                             </BorderPane>
-                                                            <BorderPane GridPane.rowIndex="1">
+                                                            <BorderPane prefHeight="347.0" prefWidth="295.0" GridPane.rowIndex="1">
                                                                <center>
                                                                   <AnchorPane>
                                                                      <children>
                                                                         <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="567.0" prefWidth="295.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                            <content>
-                                                                              <TableView fx:id="subjectTable41" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="592.0" prefWidth="295.0">
+                                                                              <TableView fx:id="coursesTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="592.0" prefWidth="295.0">
                                                                                  <columnResizePolicy>
                                                                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                                                  </columnResizePolicy>
@@ -822,7 +822,7 @@
                                                                   <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: #373a3c;" BorderPane.alignment="CENTER">
                                                                      <children>
                                                                         <Label layoutX="14.0" layoutY="10.0" text="In database" textFill="WHITE" />
-                                                                        <Button fx:id="subjectSave141" layoutX="106.0" layoutY="4.0" mnemonicParsing="false" onAction="#createSubject" prefHeight="26.0" prefWidth="92.0" style="-fx-background-color: d9534f;" text="Delete" textFill="WHITE">
+                                                                        <Button fx:id="subjectSave141" layoutX="106.0" layoutY="4.0" mnemonicParsing="false" onAction="#deleteCourses" prefHeight="26.0" prefWidth="92.0" style="-fx-background-color: d9534f;" text="Delete" textFill="WHITE">
                                                                            <graphic>
                                                                               <ImageView fitHeight="32.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0">
                                                                                  <image>

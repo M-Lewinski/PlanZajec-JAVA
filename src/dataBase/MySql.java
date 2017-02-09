@@ -2,7 +2,10 @@ package dataBase;
 
 import GUI.Main;
 import GUI.MessageMenu.Error.ErrorField;
+import GUI.MessageMenu.Info.InfoField;
 import com.mysql.jdbc.authentication.MysqlClearPasswordPlugin;
+import dataBase.actors.Prowadzacy;
+import dataBase.actors.Student;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -35,6 +38,9 @@ public class MySql {
     private static String userLogin = null;
     private static String userPassword = null;
 
+    private Prowadzacy prowadzacy = null;
+    private Student student = null;
+
     private MySql(String login, String password) {
         try {
             Class.forName(this.JDBC);
@@ -54,11 +60,13 @@ public class MySql {
             else {
                 try {
                     this.createConnect(login, password);
+                    this.checkStatus();
                 } catch (SQLException e) {
                     if (this.showErrors) {
                         ErrorField.error("Wrong password: " + password + "\nYou should check, if the password you typed is correct");
                     }
                 }
+
             }
         } catch (SQLException e) {
             if(this.showErrors){
@@ -132,7 +140,7 @@ public class MySql {
                         login,
                         password
                 );
-                System.out.println("Connected Succesfully on " + login);
+//                System.out.println("Connected Succesfully on " + login);
                 this.connect.setAutoCommit(false);
                 this.connect.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             } catch (SQLException e) {
@@ -194,6 +202,14 @@ public class MySql {
 
     public void setShowErrors(Boolean showErrors) {
         this.showErrors = showErrors;
+    }
+
+    public Prowadzacy getProwadzacy() {
+        return prowadzacy;
+    }
+
+    public Student getStudent() {
+        return student;
     }
 
     public class Refresher implements Runnable{
@@ -283,4 +299,33 @@ public class MySql {
         Main.setRefresher(refresher);
     }
 
+    public void checkStatus() throws SQLException{
+        try{
+            Connection connection = this.getConnect();
+            String SQL = "SELECT * FROM Studenci NATURAL JOIN UzytkownicyView WHERE login = (SELECT userName())";
+            PreparedStatement stmt = connection.prepareStatement(SQL);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                this.student = Student.setValuesFromRS(rs);
+//                InfoField.info("Logged in as Student");
+                System.out.println("Logged in as Student");
+            }
+            SQL = "SELECT * FROM Prowadzacy NATURAL JOIN UzytkownicyView WHERE login = (SELECT userName())";
+            stmt = connection.prepareStatement(SQL);
+            rs = stmt.executeQuery();
+            while (rs.next()){
+                this.prowadzacy = Prowadzacy.setValuesFromRS(rs);
+//                InfoField.info("Logged in as Professor");
+                System.out.println("Logged in as Professor");
+            }
+            if (this.student == null && this.prowadzacy == null){
+//                InfoField.info("Logged in as Admin");
+                System.out.println("Logged in as Admin");
+            }
+        }
+        catch (SQLException e){
+//            ErrorField.error("Failure! Couldn't find status of current user");
+            e.printStackTrace();
+        }
+    }
 }

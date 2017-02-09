@@ -1,0 +1,36 @@
+USE PlanZajec;
+
+DELIMITER $$
+DROP FUNCTION IF EXISTS `checkStudent`$$
+CREATE FUNCTION checkStudent()
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+DECLARE result int;
+SELECT count(*) INTO result FROM Studenci s
+WHERE s.login = (SELECT userName());
+IF result > 0 THEN
+RETURN (TRUE);
+ELSE
+RETURN (FALSE);
+END IF;
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+DROP FUNCTION IF EXISTS `checkProfessor`$$
+CREATE FUNCTION checkProfessor()
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+DECLARE result int;
+SELECT count(*) INTO result FROM Prowadzacy p
+WHERE p.login = (SELECT userName());
+IF result > 0 THEN
+RETURN (TRUE);
+ELSE
+RETURN (FALSE);
+END IF;
+END$$
+DELIMITER ;

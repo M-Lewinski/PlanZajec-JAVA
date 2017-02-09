@@ -18,9 +18,6 @@ public class ControllerMainMenu extends Controller{
     }
     @FXML
     public void initialize(){
-//        this.setMessageLayout(this.mainPane);
-//        if(Main.getRefresher()!=null){
-//            Main.getRefresher().createStatusLabel(this.mainPane);
-//        }
+        this.setMessageLayout(this.mainPane);
     }
 }

@@ -2,6 +2,7 @@ package GUI.MainMenu;
 
 import GUI.Controller;
 import GUI.Main;
+import dataBase.MySql;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -60,9 +61,13 @@ public class ControllerMenuBar extends Controller {
 
     @FXML
     public void initialize(){
+        this.adminTab.setVisible(false);
 //        this.setMessageLayout(this.mainPane);
         if(Main.getRefresher()!=null){
             Main.getRefresher().createStatusLabel(this.mainPane);
+        }
+        if(MySql.getInstance().getStudent() == null && MySql.getInstance().getProwadzacy() == null){
+            this.adminTab.setVisible(true);
         }
     }
 }

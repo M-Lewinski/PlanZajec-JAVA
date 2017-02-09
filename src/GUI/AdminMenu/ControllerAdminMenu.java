@@ -541,8 +541,7 @@ public class ControllerAdminMenu extends Controller{
         }
         this.setupFaculties();
         try {
-
-            this.addChoiceBoxContent(this.subjectFaculty,Wydzial.getAllObjects());
+            this.addChoiceBoxContent(this.coursesFaculty,Wydzial.getAllObjects());
         }
         catch (SQLException e){
             e.printStackTrace();
@@ -557,6 +556,14 @@ public class ControllerAdminMenu extends Controller{
             deleteSqlObject(wydzial);
         }
         this.setupFaculties();
+        this.setupCourses();
+        try {
+            this.addChoiceBoxContent(this.coursesFaculty,Wydzial.getAllObjects());
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -576,8 +583,8 @@ public class ControllerAdminMenu extends Controller{
         String name = this.courseName.getText();
         Wydzial wydzial = (Wydzial) this.coursesFaculty.getSelectionModel().getSelectedItem();
         if (!name.equals("") && !this.coursesFaculty.getSelectionModel().isEmpty()){
-            Wydzial newWydzial = new Wydzial(name);
-            insertSqlObject(newWydzial);
+            Kierunek newKierunek = new Kierunek(name,wydzial.getNazwa());
+            insertSqlObject(newKierunek);
         }
         else {
             WarningField.warning("There are fields which are empty!");
