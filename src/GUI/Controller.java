@@ -30,6 +30,7 @@ public class Controller {
         scene.getStylesheets().add("GUI/MessageMenu/Info/InfoFieldStyle.css");
         scene.getStylesheets().add("GUI/MessageMenu/Error/ErrorFieldStyle.css");
         scene.getStylesheets().add("GUI/MessageMenu/Warning/WarningFieldStyle.css");
+        scene.getStylesheets().add("GUI/ScheduleMenu/text-area-background.css");
     }
 
 

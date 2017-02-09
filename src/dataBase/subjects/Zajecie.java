@@ -204,7 +204,7 @@ public class Zajecie extends SqlObject {
 
     public static List<Zajecie> getAllObjects() throws SQLException {
         List<Zajecie> list = new ArrayList<Zajecie>();
-        String SQL = "SELECT * FROM Zajecia z NATURAL JOIN UzytkownicyView u NATURAL JOIN Przedmioty p";
+        String SQL = "SELECT * FROM Zajecia z JOIN UzytkownicyView u  JOIN Przedmioty p WHERE z.login_prowadzacego = u.login AND z.przedmiot = p.nazwa";
         Connection connect = MySql.getInstance().getConnect();
         try {
             Statement stmt = connect.createStatement();

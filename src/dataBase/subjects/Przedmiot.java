@@ -154,4 +154,8 @@ public class Przedmiot extends SqlObject {
     public String toString() {
         return this.nazwa;
     }
+
+    public String colorHex(){
+        return String.format("#%02x%02x%02x", this.getRed(), this.getGreen(), this.getBlue());
+    }
 }

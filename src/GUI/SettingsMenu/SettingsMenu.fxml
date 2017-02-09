@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.SettingsMenu.ControllerSettingsMenu">
    <children>
       <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -92,7 +92,7 @@
                               <Label text="Old password:" />
                               <PasswordField GridPane.columnIndex="1" />
                               <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Button fx:id="check" mnemonicParsing="false" onAction="#checkSchedule" prefHeight="28.0" prefWidth="180.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Change password" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Button mnemonicParsing="false" prefHeight="28.0" prefWidth="180.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Change password" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                            <columnConstraints>

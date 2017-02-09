@@ -1,0 +1,79 @@
+.text-area, .text-area .viewport, .text-area .content {
+    -fx-background-color: transparent ;
+}
+.text-area .scroll-bar{
+    -fx-background-color: transparent;
+    -fx-background-radius: 2em;
+}
+.text-area .scroll-bar:horizontal .track,
+.text-area .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color:transparent;
+    -fx-background-radius: 2em;
+}
+.text-area .scroll-bar:vertical .track-background,
+.text-area .scroll-bar:horizontal .track-background {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 2em;
+}
+.text-area .scroll-bar:horizontal .thumb {
+    -fx-background-color: rgb(211,211,211);
+    -fx-background-insets: 4 0 4 0;
+    -fx-background-radius: 2em;
+}
+.text-area .scroll-bar:vertical .thumb {
+    -fx-background-color: rgb(211,211,211);
+    -fx-background-insets: 0 4 0 4;
+    -fx-background-radius: 2em;
+}
+.text-area .scroll-bar:horizontal .thumb:hover,
+.text-area .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgb(231,231,231);
+}
+.text-area .scroll-bar:horizontal .thumb:pressed,
+.text-area .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: rgb(255,255,255);
+}
+.text-area .scroll-bar:vertical .increment-button, .scroll-bar:vertical .decrement-button {
+    -fx-background-color:transparent;
+    -fx-background-radius: 2em;
+    -fx-padding: 5;
+}
+.text-area .scroll-bar:horizontal .increment-button, .scroll-bar:horizontal .decrement-button {
+    -fx-background-color:transparent;
+    -fx-background-radius: 2em;
+    -fx-padding: 5;
+}
+.text-area .scroll-bar:horizontal .increment-arrow {
+    -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+    -fx-background-color: rgb(211,211,211);
+    -fx-padding: 0.25em;
+    -fx-rotate: -90;
+}
+.text-area .scroll-bar:vertical .increment-arrow {
+    -fx-background-color: rgb(211,211,211);
+    -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+    -fx-padding: 0.25em;
+    -fx-rotate: 0;
+}
+.text-area .scroll-bar:horizontal .decrement-arrow {
+    -fx-background-color: rgb(211,211,211);
+    -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+    -fx-padding: 0.25em;
+    -fx-rotate: 90;
+}
+.text-area .scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: rgb(211,211,211);
+    -fx-shape: "M 0 0 L 4 8 L 8 0 Z";
+    -fx-padding: 0.25em;
+    -fx-rotate: -180;
+}
+.text-area .scroll-bar:vertical:focused,
+.text-area .scroll-bar:horizontal:focused {
+    -fx-background-color: transparent,transparent,rtransparent;
+}
+
+.text-area .scroll-pane > .corner {
+    -fx-background-color: transparent ;
+}

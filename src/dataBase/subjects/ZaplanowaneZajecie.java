@@ -82,4 +82,12 @@ public class ZaplanowaneZajecie extends SqlObject {
         this.zajecie.delete();
         this.zajecie = null;
     }
+
+    public Zajecie getZajecie() {
+        return zajecie;
+    }
+
+    public void setZajecie(Zajecie zajecie) {
+        this.zajecie = zajecie;
+    }
 }
