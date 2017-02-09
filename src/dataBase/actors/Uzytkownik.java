@@ -158,4 +158,9 @@ public abstract class Uzytkownik extends SqlObject {
             throw e;
         }
     }
+
+    @Override
+    public String toString() {
+        return this.imie + " " + this.nazwisko;
+    }
 }

@@ -1,22 +1,85 @@
 package dataBase.subjects;
 
-public class ZaplanowaneZajecie {
-  private java.sql.Date data;
-  private Long id_zajecia;
+import GUI.MessageMenu.Error.ErrorField;
+import dataBase.SqlObject;
+import dataBase.generator.SqlClassGenerator;
 
-  public java.sql.Date getData() {
-    return data;
-  }
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-  public void setData(java.sql.Date data) {
-    this.data = data;
-  }
+public class ZaplanowaneZajecie extends SqlObject {
+    private java.sql.Date data;
+    private int id_zajecia;
+    private Zajecie zajecie;
 
-  public Long getId_zajecia() {
-    return id_zajecia;
-  }
+    public java.sql.Date getData() {
+        return data;
+    }
 
-  public void setId_zajecia(Long id_zajecia) {
-    this.id_zajecia = id_zajecia;
-  }
+    public void setData(java.sql.Date data) {
+        this.data = data;
+    }
+
+    public int getId_zajecia() {
+        return id_zajecia;
+    }
+
+    public void setId_zajecia(int id_zajecia) {
+        this.id_zajecia = id_zajecia;
+    }
+
+    public ZaplanowaneZajecie(Date data, int id_zajecia, Zajecie zajecie) {
+        this.data = data;
+        this.id_zajecia = id_zajecia;
+        this.zajecie = zajecie;
+    }
+
+    @Override
+    public void addObjectToBase(PreparedStatement stmt) throws SQLException {
+        try {
+            this.setValueSQL(stmt, 1, this.data);
+            this.setValueSQL(stmt, 2, this.id_zajecia);
+        } catch (SQLException e) {
+            ErrorField.error("Failure while inserting new class to database");
+            throw e;
+        }
+    }
+
+    @Override
+    public void deleteObjectFromBase(PreparedStatement stmt) throws SQLException {
+        try {
+            this.setValueSQL(stmt, 1, this.data);
+            this.setValueSQL(stmt, 2, this.id_zajecia);
+        } catch (SQLException e) {
+            ErrorField.error("Failure while deleting class from database");
+            throw e;
+        }
+    }
+
+    @Override
+    public String getInsertSQL() {
+        String SQL = "INSERT INTO Zaplanowane_zajecia " +
+                "VALUES(?,?)";
+        return SQL;
+    }
+
+    @Override
+    public String getDeleteSQL() {
+        String SQL = "DELETE FROM Zaplanowane_zajecia WHERE data = ? AND id_zajecia = ?";
+        return SQL;
+    }
+
+    @Override
+    public void generateObject(PreparedStatement stmt, List<ArrayList<String>> data, SqlClassGenerator sqlClassGenerator, int i) throws SQLException {
+
+    }
+
+    @Override
+    public void delete() {
+        this.zajecie.delete();
+        this.zajecie = null;
+    }
 }

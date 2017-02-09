@@ -131,6 +131,11 @@ public class Kierunek extends SqlObject {
 
     @Override
     public List<? extends SqlObject> getRelatedObjects() throws SQLException {
-        return Semestr.getAllObjects();
+        List <Semestr> list = Semestr.getAllObjects();
+        for (Semestr s:
+             list) {
+            s.setKierunek(this);
+        }
+        return list;
     }
 }

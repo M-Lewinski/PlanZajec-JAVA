@@ -149,4 +149,9 @@ public class Przedmiot extends SqlObject {
         String SQL = "DELETE FROM Przedmioty WHERE nazwa = ?";
     return SQL;
     }
+
+    @Override
+    public String toString() {
+        return this.nazwa;
+    }
 }

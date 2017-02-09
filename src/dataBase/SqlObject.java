@@ -81,4 +81,5 @@ public abstract class SqlObject {
         return null;
     };
 
+    public void delete(){};
 }

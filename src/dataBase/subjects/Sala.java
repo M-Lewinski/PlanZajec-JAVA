@@ -51,9 +51,9 @@ public class Sala extends SqlObject {
     @Override
     public void addObjectToBase(PreparedStatement stmt) throws SQLException {
         try {
-            stmt.setString(1, this.sala);
-            stmt.setString(2, this.budynek);
-            stmt.setInt(3, this.liczba_miejsc);
+            this.setValueSQL(stmt,1,this.sala);
+            this.setValueSQL(stmt,2,this.budynek);
+            this.setValueSQL(stmt,3,this.liczba_miejsc);
         } catch (SQLException e) {
             ErrorField.error("Failure while inserting new Rooms to database");
             throw e;
@@ -79,8 +79,8 @@ public class Sala extends SqlObject {
     @Override
     public void deleteObjectFromBase(PreparedStatement stmt) throws SQLException {
         try {
-            stmt.setString(1, this.sala);
-            stmt.setString(2, this.budynek);
+            this.setValueSQL(stmt,1,this.sala);
+            this.setValueSQL(stmt,2,this.budynek);
         } catch (SQLException e) {
             ErrorField.error("Failure while deleting Room from database");
             throw e;
@@ -124,6 +124,9 @@ public class Sala extends SqlObject {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return this.sala + " " + this.budynek;
+    }
 }
 

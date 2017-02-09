@@ -3,6 +3,7 @@ package dataBase.structure;
 import dataBase.MySql;
 import dataBase.SqlObject;
 import dataBase.generator.SqlClassGenerator;
+import dataBase.subjects.Przedmiot;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class Semestr extends SqlObject {
     private int numer;
-
+    private Kierunek kierunek;
     public Semestr() {
     }
 
@@ -101,5 +102,24 @@ public class Semestr extends SqlObject {
     @Override
     public String toString() {
         return Integer.toString(this.numer);
+    }
+
+    public Kierunek getKierunek() {
+        return kierunek;
+    }
+
+    public void setKierunek(Kierunek kierunek) {
+        this.kierunek = kierunek;
+    }
+
+    @Override
+    public void delete(){
+        this.kierunek = null;
+    }
+
+    @Override
+    public List<? extends SqlObject> getRelatedObjects() throws SQLException {
+        List <Przedmiot> list = Przedmiot.getAllObjects();
+        return list;
     }
 }

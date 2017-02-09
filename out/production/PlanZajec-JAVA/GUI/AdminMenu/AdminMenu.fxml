@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
@@ -496,7 +497,7 @@
                                     </AnchorPane>
                                  </top>
                               </BorderPane>
-                              <BorderPane fx:id="lectures" visible="false">
+                              <BorderPane fx:id="lectures">
                                  <center>
                                     <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                        <children>
@@ -506,16 +507,21 @@
                                                    <children>
                                                       <VBox layoutX="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="261.0" prefWidth="265.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="359.0" prefWidth="295.0">
+                                                            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="516.0" prefWidth="295.0">
                                                                <children>
                                                                   <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="174.0" prefWidth="265.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="0.0">
                                                                      <columnConstraints>
                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                                                                      </columnConstraints>
                                                                      <rowConstraints>
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -525,64 +531,94 @@
                                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                      </rowConstraints>
                                                                      <children>
-                                                                        <Group>
-                                                                           <children>
-                                                                              <Label layoutY="5.0" text="Subject:" />
-                                                                              <ChoiceBox layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
-                                                                           </children>
-                                                                        </Group>
                                                                         <Group GridPane.rowIndex="2">
                                                                            <children>
-                                                                              <Label layoutY="5.0" text="Group" />
-                                                                              <TextField layoutX="73.0" prefHeight="26.0" prefWidth="189.0" />
+                                                                              <Label layoutY="5.0" text="Semester:" />
+                                                                              <ChoiceBox fx:id="classesSemester" disable="true" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
                                                                            </children>
                                                                         </Group>
                                                                         <Group GridPane.rowIndex="3">
                                                                            <children>
-                                                                              <Label layoutY="5.0" text="Subgroup" />
-                                                                              <TextField layoutX="73.0" prefHeight="26.0" prefWidth="189.0" />
-                                                                           </children>
-                                                                        </Group>
-                                                                        <Group GridPane.rowIndex="1">
-                                                                           <children>
-                                                                              <Label layoutY="5.0" text="Type:" />
-                                                                              <ChoiceBox layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
-                                                                           </children>
-                                                                        </Group>
-                                                                        <Group GridPane.rowIndex="4">
-                                                                           <children>
-                                                                              <Label layoutY="5.0" text="Day:" />
-                                                                              <ChoiceBox layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                              <Label layoutY="5.0" text="Subject:" />
+                                                                              <ChoiceBox fx:id="classesSubject" disable="true" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
                                                                            </children>
                                                                         </Group>
                                                                         <Group GridPane.rowIndex="5">
                                                                            <children>
-                                                                              <Label layoutY="5.0" text="Hour:" />
-                                                                              <ChoiceBox layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                              <Label layoutY="5.0" text="Group" />
+                                                                              <TextField fx:id="classesGroup" layoutX="73.0" prefHeight="26.0" prefWidth="189.0" />
                                                                            </children>
                                                                         </Group>
                                                                         <Group GridPane.rowIndex="6">
                                                                            <children>
-                                                                              <Label layoutY="5.0" text="Week:" />
-                                                                              <ChoiceBox layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                              <Label layoutY="5.0" text="Subgroup" />
+                                                                              <TextField fx:id="classesSubGroup" layoutX="73.0" prefHeight="26.0" prefWidth="189.0" />
+                                                                           </children>
+                                                                        </Group>
+                                                                        <Group GridPane.rowIndex="4">
+                                                                           <children>
+                                                                              <Label layoutY="5.0" text="Type:" />
+                                                                              <ChoiceBox fx:id="classesType" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
                                                                            </children>
                                                                         </Group>
                                                                         <Group GridPane.rowIndex="7">
                                                                            <children>
-                                                                              <Label layoutY="5.0" text="Building:" />
-                                                                              <ChoiceBox layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                              <Label layoutY="5.0" text="Day:" />
+                                                                              <ChoiceBox fx:id="classesDay" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
                                                                            </children>
                                                                         </Group>
                                                                         <Group GridPane.rowIndex="8">
                                                                            <children>
-                                                                              <Label layoutY="5.0" text="Room:" />
-                                                                              <ChoiceBox disable="true" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                              <Label layoutY="5.0" text="Hour:" />
+                                                                              <ChoiceBox fx:id="classesHour" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
                                                                            </children>
                                                                         </Group>
                                                                         <Group GridPane.rowIndex="9">
                                                                            <children>
+                                                                              <Label layoutY="5.0" text="Week:" />
+                                                                              <ChoiceBox fx:id="classesWeek" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                           </children>
+                                                                        </Group>
+                                                                        <Group GridPane.rowIndex="10">
+                                                                           <children>
+                                                                              <Label layoutY="5.0" text="Year:" />
+                                                                              <ChoiceBox fx:id="classesYear" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                           </children>
+                                                                        </Group>
+                                                                        <Group GridPane.rowIndex="11">
+                                                                           <children>
+                                                                              <Label layoutY="5.0" text="Room:" />
+                                                                              <ChoiceBox fx:id="classesRoom" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                           </children>
+                                                                        </Group>
+                                                                        <Group GridPane.rowIndex="12">
+                                                                           <children>
                                                                               <Label layoutY="5.0" text="Professor:" />
-                                                                              <ChoiceBox layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                              <ChoiceBox fx:id="classesProfessor" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                           </children>
+                                                                        </Group>
+                                                                        <Group GridPane.rowIndex="1">
+                                                                           <children>
+                                                                              <Label layoutY="5.0" text="Course:" />
+                                                                              <ChoiceBox fx:id="classesCourses" disable="true" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                           </children>
+                                                                        </Group>
+                                                                        <Group>
+                                                                           <children>
+                                                                              <Label layoutY="5.0" text="Faculty:" />
+                                                                              <ChoiceBox fx:id="classesFaculty" layoutX="74.0" prefHeight="26.0" prefWidth="188.0" />
+                                                                           </children>
+                                                                        </Group>
+                                                                        <Group GridPane.rowIndex="13">
+                                                                           <children>
+                                                                              <Label layoutY="5.0" text="First day:" />
+                                                                              <DatePicker fx:id="classesDate" layoutX="73.0" prefHeight="26.0" prefWidth="190.0" />
+                                                                           </children>
+                                                                        </Group>
+                                                                        <Group GridPane.rowIndex="14">
+                                                                           <children>
+                                                                              <Label layoutY="5.0" text="Number of classes:" />
+                                                                              <ChoiceBox fx:id="classesNumberClasses" layoutX="142.0" prefHeight="26.0" prefWidth="122.0" />
                                                                            </children>
                                                                         </Group>
                                                                      </children>
@@ -591,7 +627,7 @@
                                                             </AnchorPane>
                                                             <AnchorPane prefHeight="41.0" prefWidth="295.0">
                                                                <children>
-                                                                  <Button layoutX="88.0" layoutY="8.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="189.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Save" textFill="WHITE">
+                                                                  <Button layoutX="88.0" layoutY="8.0" mnemonicParsing="false" onAction="#createClass" prefHeight="26.0" prefWidth="189.0" style="-fx-background-color: #5cb85c; -fx-border-color: #4cae4c;" text="Save" textFill="WHITE">
                                                                      <graphic>
                                                                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0">
                                                                            <image>
@@ -614,7 +650,7 @@
                                                                <children>
                                                                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="567.0" prefWidth="295.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                      <content>
-                                                                        <TableView fx:id="subjectTable3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="592.0" prefWidth="295.0">
+                                                                        <TableView fx:id="classesTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="592.0" prefWidth="295.0">
                                                                            <columnResizePolicy>
                                                                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                                            </columnResizePolicy></TableView>
@@ -627,7 +663,7 @@
                                                             <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: #373a3c;" BorderPane.alignment="CENTER">
                                                                <children>
                                                                   <Label layoutX="14.0" layoutY="10.0" text="In database" textFill="WHITE" />
-                                                                  <Button fx:id="subjectSave13" layoutX="106.0" layoutY="4.0" mnemonicParsing="false" onAction="#createSubject" prefHeight="26.0" prefWidth="92.0" style="-fx-background-color: d9534f;" text="Delete" textFill="WHITE">
+                                                                  <Button fx:id="subjectSave13" layoutX="106.0" layoutY="4.0" mnemonicParsing="false" onAction="#deleteClasses" prefHeight="26.0" prefWidth="92.0" style="-fx-background-color: d9534f;" text="Delete" textFill="WHITE">
                                                                      <graphic>
                                                                         <ImageView fitHeight="32.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0">
                                                                            <image>

@@ -16,7 +16,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 public class Controller {
@@ -68,15 +71,23 @@ public class Controller {
 //        obsList.add(0,"");
         choiceBox.setItems(obsList);
     }
+
+    public void addChoiceBoxContentString(ChoiceBox<String> choiceBox, List<String> list){
+        ObservableList<String> obsList = FXCollections.observableArrayList(list);
+//        obsList.add(0,"");
+        choiceBox.setItems(obsList);
+    }
     public void addListenerChoiceBox(ChoiceBox<SqlObject> mainChoice, ChoiceBox<SqlObject> subChoice){
 //        System.out.println("HEJ!");
         mainChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (mainChoice.getSelectionModel().getSelectedItem() == null){
+                delete(subChoice);
                 this.clearChoiceBox(subChoice);
                 subChoice.setDisable(true);
             }
             else if (newValue != oldValue && newValue != null){
                 try {
+                    delete(subChoice);
                     this.clearChoiceBox(subChoice);
                     List<? extends SqlObject> list = mainChoice.getValue().getRelatedObjects();
                     this.addChoiceBoxContent(subChoice,list);
@@ -88,6 +99,16 @@ public class Controller {
                 }
             }
         });
+    }
+
+    private void delete(ChoiceBox<SqlObject> subChoice) {
+        List<SqlObject> oldList = subChoice.getItems();
+        if(oldList!=null){
+            for (SqlObject s:
+                    oldList) {
+                s.delete();
+            }
+        }
     }
 
     public void clearChoiceBox(ChoiceBox<SqlObject> choiceBox){
@@ -115,7 +136,7 @@ public class Controller {
             }
         });
     }
-//    public void facultyCellFactory(ChoiceBox choiceBox){
-//    }
+
+
 }
 

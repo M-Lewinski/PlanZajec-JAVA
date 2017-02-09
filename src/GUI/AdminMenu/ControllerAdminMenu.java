@@ -14,6 +14,9 @@ import dataBase.structure.Semestr;
 import dataBase.structure.Wydzial;
 import dataBase.subjects.Przedmiot;
 import dataBase.subjects.Sala;
+import dataBase.subjects.Zajecie;
+import dataBase.subjects.ZaplanowaneZajecie;
+import dataBase.subjects.studentInfo.Miejsce;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +28,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +43,7 @@ public class ControllerAdminMenu extends Controller{
     private List<Sala> roomsList;
     private List<Wydzial> facultiesList;
     private List<Kierunek> coursesList;
+    private List<Zajecie> classesList;
 
     @FXML
     public BorderPane students;
@@ -133,6 +139,39 @@ public class ControllerAdminMenu extends Controller{
     public TableView coursesTable;
 
 
+    @FXML
+    public ChoiceBox<SqlObject> classesFaculty;
+    @FXML
+    public ChoiceBox<SqlObject> classesCourses;
+    @FXML
+    public ChoiceBox<SqlObject> classesSemester;
+    @FXML
+    public ChoiceBox<String> classesType;
+    @FXML
+    public ChoiceBox<String> classesDay;
+    @FXML
+    public ChoiceBox<String> classesHour;
+    @FXML
+    public ChoiceBox<String> classesWeek;
+    @FXML
+    public ChoiceBox<String> classesYear;
+    @FXML
+    public ChoiceBox<String> classesNumberClasses;
+    @FXML
+    public ChoiceBox<SqlObject> classesRoom;
+    @FXML
+    public ChoiceBox<SqlObject> classesProfessor;
+    @FXML
+    public ChoiceBox<SqlObject> classesSubject;
+    @FXML
+    public TextField classesGroup;
+    @FXML
+    public TextField classesSubGroup;
+    @FXML
+    public TableView classesTable;
+    @FXML
+    public DatePicker classesDate;
+
     private ToggleButton oldToggle;
     public void changePane(BorderPane newBorderPane){
         if (currentPane!=null){
@@ -182,6 +221,18 @@ public class ControllerAdminMenu extends Controller{
     public void actionLectures(ActionEvent event){
         event.consume();
         this.togglePane(lectures,event,oldToggle);
+        this.clearChoiceBox(classesFaculty);
+        this.clearChoiceBox(classesRoom);
+        this.clearChoiceBox(classesProfessor);
+        try {
+            this.addChoiceBoxContent(this.classesFaculty,Wydzial.getAllObjects());
+            this.addChoiceBoxContent(this.classesRoom,Sala.getAllObjects());
+            this.addChoiceBoxContent(this.classesProfessor,Prowadzacy.getAllObjects());
+        }
+        catch (SQLException e){
+            ErrorField.error("Setup error!");
+        }
+        this.setupClasses();
     }
     public void actionFaculties(ActionEvent event){
         event.consume();
@@ -209,13 +260,16 @@ public class ControllerAdminMenu extends Controller{
 
 
 
+    boolean showMessage = true;
     private void insertSqlObject(SqlObject sqlObject) {
         Connection connection = MySql.getInstance().getConnect();
         try {
             PreparedStatement stmt = sqlObject.addObjectToBase(connection);
             stmt.execute();
             connection.commit();
-            InfoField.info("Inserting new object was successful");
+            if(showMessage){
+                InfoField.info("Inserting new object was successful");
+            }
         }
         catch (SQLException e){
 //            if(save!=null){
@@ -226,19 +280,11 @@ public class ControllerAdminMenu extends Controller{
                     err.printStackTrace();
                 }
 //            }
-            ErrorField.error("Failure! Duplicate entry for Primary Key");
+            if(showMessage){
+                ErrorField.error("Failure! Duplicate entry for Primary Key");
+            }
             e.printStackTrace();
         }
-//        finally {
-//            if(save!=null){
-//                try {
-//                    connection.releaseSavepoint(save);
-//                }
-//                catch (SQLException e){
-//                    ErrorField.error("SAVEPOINT FAILURE");
-//                }
-//            }
-//        }
     }
 
     public void createSubject(){
@@ -337,6 +383,65 @@ public class ControllerAdminMenu extends Controller{
         cName.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getNazwa()));
         cFaculty.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getNazwa_wydzialu()));
         this.coursesTable.getColumns().addAll(cName,cFaculty);
+
+
+        TableColumn<Zajecie,String> zId = new TableColumn("Id");
+        TableColumn<Zajecie,String> zYear = new TableColumn("Year");
+        TableColumn<Zajecie,String> zSubject= new TableColumn("Subject");
+        TableColumn<Zajecie,String> zProfessor= new TableColumn("Professor");
+        TableColumn<Zajecie,String> zDay = new TableColumn("Day");
+        TableColumn<Zajecie,String> zHour = new TableColumn("Hour");
+        TableColumn<Zajecie,String> zWeek = new TableColumn("Week");
+        TableColumn<Zajecie,String> zRoom = new TableColumn("Room");
+        TableColumn<Zajecie,String> zGroup = new TableColumn("Group");
+        TableColumn<Zajecie,String> zSubGroup= new TableColumn("SubGroup");
+
+        zId.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getId())));
+        zYear.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getRocznik()));
+        zSubject.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getPrzedmiot()));
+        zProfessor.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getProfessor().getImie() + " " + row.getValue().getProfessor().getNazwisko()));
+        zDay.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getDzien())));
+        zHour.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getGodzina())));
+        zWeek.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getTydzien())));
+        zRoom.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getSala() + " " + row.getValue().getBudynek()));
+        zGroup.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getGrupa())));
+        zSubGroup.setCellValueFactory(row -> new SimpleStringProperty(Integer.toString(row.getValue().getPodgrupa())));
+        this.classesTable.getColumns().addAll(zId,zYear,zSubject,zProfessor,zDay,zHour,zWeek,zRoom,zGroup,zSubGroup);
+        this.onlyNumber(this.classesGroup,0,5);
+        this.onlyNumber(this.classesSubGroup,0,2);
+
+
+        this.addListenerChoiceBox(this.classesFaculty,this.classesCourses);
+        this.addListenerChoiceBox(this.classesCourses,this.classesSemester);
+        this.addListenerChoiceBox(this.classesSemester,this.classesSubject);
+        List<String> types = new ArrayList<String>();
+        types.add("Lecture");
+        types.add("Laboratory");
+        types.add("Practice class");
+        this.addChoiceBoxContentString(this.classesType,types);
+        List<String> days = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            days.add(Zajecie.convertDay(i));
+        }
+        this.addChoiceBoxContentString(this.classesDay,days);
+        List<String> hours = new ArrayList<>();
+        for (int i = 1; i < 9; i++) {
+            hours.add(Zajecie.convertHour(i));
+        }
+        this.addChoiceBoxContentString(this.classesHour,hours);
+        List<String> weeks = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            weeks.add(Zajecie.convertWeek(i));
+        }
+        this.addChoiceBoxContentString(this.classesWeek,weeks);
+        List<String> years = new ArrayList<>();
+        years.add("2016/2017");
+        this.addChoiceBoxContentString(this.classesYear,years);
+        List<String> numbers =  new ArrayList<>();
+        numbers.add("15");
+        numbers.add("30");
+        this.addChoiceBoxContentString(this.classesNumberClasses,numbers);
+
     }
 
     public void setupSubjects(){
@@ -374,9 +479,12 @@ public class ControllerAdminMenu extends Controller{
             PreparedStatement stmt = sqlObject.deleteObjectFromBase(connection);
             stmt.execute();
             connection.commit();
-            InfoField.info("Deleting new object was successful");
+            if(showMessage){
+                InfoField.info("Deleting new object was successful");
+            }
         }
         catch (SQLException e){
+            ErrorField.error("Deleting new object was unsuccessful");
                 try {
                     connection.rollback();
                 }
@@ -601,4 +709,149 @@ public class ControllerAdminMenu extends Controller{
         this.setupCourses();
     }
 
+
+
+    public void setupClasses(){
+        try {
+            if(this.classesList!=null){
+                for (Zajecie z:
+                        this.classesList) {
+                    z.delete();
+                }
+            }
+            this.classesList = Zajecie.getAllObjects();
+            setupTable(this.classesTable,this.classesList);
+        }
+        catch (SQLException e){
+            ErrorField.error("TableView error");
+        }
+    }
+
+
+    public void createClass(){
+        Wydzial wydzial = (Wydzial) this.classesFaculty.getSelectionModel().getSelectedItem();
+        Kierunek kierunek= (Kierunek) this.classesCourses.getSelectionModel().getSelectedItem();
+        Semestr semestr = (Semestr) this.classesSemester.getSelectionModel().getSelectedItem();
+        Przedmiot przedmiot = (Przedmiot) this.classesSubject.getSelectionModel().getSelectedItem();
+        String typ = this.classesType.getSelectionModel().getSelectedItem();
+        String dzien = this.classesDay.getSelectionModel().getSelectedItem();
+        String godzina = this.classesHour.getSelectionModel().getSelectedItem();
+        String tydzien = this.classesWeek.getSelectionModel().getSelectedItem();
+        String rocznik = this.classesYear.getSelectionModel().getSelectedItem();
+        String temp = this.classesGroup.getText();
+        String temp2 = this.classesSubGroup.getText();
+        int grupa = -1;
+        if(!temp.equals("")){
+            grupa = Integer.parseInt(temp);
+        }
+        int podGrupa = -1;
+        if(!temp2.equals("")){
+            podGrupa = Integer.parseInt(temp2);
+        }
+        Prowadzacy prowadzacy = (Prowadzacy) this.classesProfessor.getSelectionModel().getSelectedItem();
+        Sala sala = (Sala) this.classesRoom.getSelectionModel().getSelectedItem();
+        LocalDate date = null;
+        if(this.classesDate.getValue()!=null){
+            date = this.classesDate.getValue();
+        }
+        String temp3 = this.classesNumberClasses.getSelectionModel().getSelectedItem();
+        int numberClasses = -1;
+        if(temp3 !=null){
+            if(!temp3.equals("")){
+                numberClasses = Integer.parseInt(temp3);
+            }
+        }
+        if (!this.classesFaculty.getSelectionModel().isEmpty() &&
+                !this.classesCourses.getSelectionModel().isEmpty() &&
+                !this.classesSemester.getSelectionModel().isEmpty() &&
+                !this.classesSubject.getSelectionModel().isEmpty() &&
+                !this.classesProfessor.getSelectionModel().isEmpty() &&
+                !this.classesRoom.getSelectionModel().isEmpty() &&
+                grupa >= 0 &&
+                podGrupa >= 0 &&
+                numberClasses >= 0 &&
+                date != null &&
+                !typ.equals("") &&
+                !dzien.equals("") &&
+                !godzina.equals("") &&
+                !tydzien.equals("") &&
+                !rocznik.equals("")
+                ){
+            Connection connection = MySql.getInstance().getConnect();
+            try {
+                String SQL = "SELECT COUNT(*) FROM Zajecia WHERE (rocznik = ? AND dzien = ? AND godzina = ? AND sala = ? AND budynek = ?) AND (tydzien = 0 OR tydzien = ?) FOR UPDATE ";
+                PreparedStatement checkRoom = connection.prepareStatement(SQL);
+                checkRoom.setString(1,rocznik);
+                checkRoom.setInt(2,Zajecie.convertDay(dzien));
+                checkRoom.setInt(3,Zajecie.convertHour(godzina));
+                checkRoom.setString(4,sala.getSala());
+                checkRoom.setString(5,sala.getBudynek());
+                checkRoom.setInt(6,Zajecie.convertWeek(tydzien));
+                ResultSet checkedRoom = checkRoom.executeQuery();
+                int test = 0;
+                if(checkedRoom.next()){
+                    test = checkedRoom.getInt(1);
+                }
+                if(test!=0){
+                    ErrorField.error("There is already class for that specific time and room");
+                    connection.commit();
+                    return;
+                }
+                String SQL2 = "SELECT COUNT(*) FROM Zajecia WHERE (rocznik = ? AND dzien = ? AND godzina = ?) AND (tydzien = 0 OR tydzien = ?) AND (login_prowadzacego = ?)";
+                PreparedStatement checkProfessor = connection.prepareStatement(SQL2);
+                checkProfessor.setString(1,rocznik);
+                checkProfessor.setInt(2,Zajecie.convertDay(dzien));
+                checkProfessor.setInt(3,Zajecie.convertHour(godzina));
+                checkProfessor.setInt(4,Zajecie.convertWeek(tydzien));
+                checkProfessor.setString(5,prowadzacy.getLogin());
+                ResultSet checkedProfessor = checkProfessor.executeQuery();
+                test = 0;
+                if(checkedProfessor.next()){
+                    test = checkedProfessor.getInt(1);
+                }
+                if(test!=0){
+                    ErrorField.error("Professor already has classes in that specific time");
+                    connection.commit();
+                    return;
+                }
+                int id = -1;
+                Zajecie newZajecie = new Zajecie(id,rocznik,Zajecie.convertDay(dzien),Zajecie.convertHour(godzina),Zajecie.convertWeek(tydzien),typ,numberClasses,grupa,podGrupa,przedmiot.getNazwa(),prowadzacy.getLogin(),sala.getSala(),sala.getBudynek(),prowadzacy,przedmiot);
+                insertSqlObject(newZajecie);
+                String SQL3 = "SELECT id FROM Zajecia ORDER BY id DESC LIMIT 1";
+                PreparedStatement checkId = connection.prepareStatement(SQL3);
+                ResultSet checkedID = checkId.executeQuery();
+                if(checkedID.next()){
+                    id = checkedID.getInt(1);
+                }
+                showMessage = false;
+                if(id > 0){
+                    for (int i = 0; i < numberClasses; i++) {
+                        ZaplanowaneZajecie newZaplanowaneZajecie = new ZaplanowaneZajecie(Date.valueOf(date.plusDays(7*i)),id,newZajecie);
+                        insertSqlObject(newZaplanowaneZajecie);
+                    }
+                    for (int i = 0; i < sala.getLiczba_miejsc(); i++) {
+                        Miejsce newMiejsce = new Miejsce(-1,id,null);
+                        insertSqlObject(newMiejsce);
+                    }
+                }
+            }
+            catch (SQLException e){
+                ErrorField.error("Failure! Couldnt' create new class!");
+            }
+        }
+        else {
+            WarningField.warning("There are fields which are empty!");
+        }
+        showMessage = true;
+        this.setupClasses();
+    }
+
+
+    public void deleteClasses() {
+        Zajecie zajecie = (Zajecie) this.classesTable.getSelectionModel().getSelectedItem();
+        if (zajecie != null) {
+            deleteSqlObject(zajecie);
+        }
+        this.setupClasses();
+    }
 }
