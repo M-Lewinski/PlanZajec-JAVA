@@ -126,7 +126,7 @@ public class Sala extends SqlObject {
 
     @Override
     public String toString() {
-        return this.sala + " " + this.budynek;
+        return this.sala + " " + this.budynek + " (" + Integer.toString(this.liczba_miejsc) +")";
     }
 }
 
