@@ -5,6 +5,7 @@ import dataBase.MySql;
 import dataBase.SqlObject;
 import dataBase.generator.SqlClassGenerator;
 import dataBase.subjects.Przedmiot;
+import dataBase.subjects.Zajecie;
 import dataBase.subjects.ZaplanowaneZajecie;
 import javafx.scene.paint.Color;
 
@@ -91,15 +92,16 @@ public class Miejsce extends SqlObject {
   }
 
     private static Miejsce previouse;
-    public static List<Miejsce> getAllObjects() throws SQLException {
+    public static List<Miejsce> getAllObjects(Zajecie zajecie) throws SQLException {
         previouse = null;
         List<Miejsce> list = new ArrayList<Miejsce>();
-        String SQL = "SELECT * FROM Miejsca m LEFT OUTER JOIN Obecnosci o ON m.student = o.student LEFT OUTER JOIN UzytkownicyView u ON m.student = u.login";
+        String SQL = "SELECT * FROM Miejsca m LEFT OUTER JOIN Obecnosci o ON m.student = o.student LEFT OUTER JOIN UzytkownicyView u ON m.student = u.login WHERE m.id_zajecia = ?";
         Connection connect = MySql.getInstance().getConnect();
         try {
-            Statement stmt = connect.createStatement();
-            stmt.executeQuery(SQL);
-            ResultSet rs = stmt.getResultSet();
+            PreparedStatement stmt = connect.prepareStatement(SQL);
+            stmt.setInt(1,zajecie.getId());
+            ResultSet rs =  stmt.executeQuery();
+//           stmt.getResultSet();
             while (rs.next()){
                 Miejsce.setValuesFromRS(rs,list);
             }

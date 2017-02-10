@@ -567,6 +567,12 @@ public class ControllerScheduleMenu extends Controller{
                 err.printStackTrace();
             }
         }
+        finally {
+            currentZajecie.findSpots();
+            ObservableList<Miejsce> data = FXCollections.observableArrayList(currentZajecie.getMiejsca());
+            miejscaTableView.setItems(data);
+            miejscaTableView.refresh();
+        }
     }
 
     public void leaveNewSpot(){
@@ -576,7 +582,7 @@ public class ControllerScheduleMenu extends Controller{
         }
         Connection connection = MySql.getInstance().getConnect();
         try {
-            String SQL = "SELECT  COUNT(*) FROM Miejsca WHERE id_zajecia = ? FOR UPDATE ";
+            String SQL = "SELECT  COUNT(*) FROM Miejsca WHERE id_zajecia = ? AND student = (SELECT userName()) FOR UPDATE ";
             PreparedStatement stmt = connection.prepareStatement(SQL);
             stmt.setInt(1,this.currentZajecie.getId());
             ResultSet rs = stmt.executeQuery();
@@ -614,6 +620,12 @@ public class ControllerScheduleMenu extends Controller{
             }
             e.printStackTrace();
 
+        }
+        finally {
+            currentZajecie.findSpots();
+            ObservableList<Miejsce> data = FXCollections.observableArrayList(currentZajecie.getMiejsca());
+            miejscaTableView.setItems(data);
+            miejscaTableView.refresh();
         }
     }
 

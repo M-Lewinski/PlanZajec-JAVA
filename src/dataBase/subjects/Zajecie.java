@@ -409,7 +409,7 @@ public class Zajecie extends SqlObject {
             this.miejsca.clear();
         }
         try {
-            this.miejsca.addAll(Miejsce.getAllObjects());
+            this.miejsca.addAll(Miejsce.getAllObjects(this));
         }
         catch (SQLException e){
             ErrorField.error("Failure while looking for spots");

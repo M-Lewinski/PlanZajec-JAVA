@@ -814,7 +814,27 @@ public class ControllerAdminMenu extends Controller{
                     connection.commit();
                     return;
                 }
-                
+                String SQL4 = "SELECT COUNT(*) FROM Zajecia WHERE (rocznik = ? AND dzien = ? AND godzina = ?) AND (tydzien = 0 OR tydzien = ?) AND ((? = 0 OR grupa = 0 OR (grupa = ? AND (? = 0 OR podgrupa = 0 OR podgrupa = ?))))";
+                PreparedStatement checkSemestr = connection.prepareStatement(SQL4);
+                checkSemestr.setString(1,rocznik);
+                checkSemestr.setInt(2,Zajecie.convertDay(dzien));
+                checkSemestr.setInt(3,Zajecie.convertHour(godzina));
+                checkSemestr.setInt(4,Zajecie.convertWeek(tydzien));
+                checkSemestr.setInt(5,grupa);
+                checkSemestr.setInt(6,grupa);
+                checkSemestr.setInt(7,podGrupa);
+                checkSemestr.setInt(8,podGrupa);
+                ResultSet checkedSemestr= checkSemestr.executeQuery();
+                test = 0;
+                if(checkedSemestr.next()){
+                    test = checkedSemestr.getInt(1);
+                }
+                if(test > 0){
+                    ErrorField.error("There is already class for that specific group");
+                    connection.commit();
+                    return;
+                }
+
                 int id = -1;
                 Zajecie newZajecie = new Zajecie(id,rocznik,Zajecie.convertDay(dzien),Zajecie.convertHour(godzina),Zajecie.convertWeek(tydzien),typ,numberClasses,grupa,podGrupa,przedmiot.getNazwa(),prowadzacy.getLogin(),sala.getSala(),sala.getBudynek(),prowadzacy,przedmiot);
                 insertSqlObject(newZajecie);
