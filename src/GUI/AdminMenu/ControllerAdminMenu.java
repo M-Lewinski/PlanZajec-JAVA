@@ -563,7 +563,7 @@ public class ControllerAdminMenu extends Controller{
             group = Integer.parseInt(temp);
         }
         if (group != 0 && !name.equals("") && !surname.equals("") && !login.equals("") && !password.equals("") && !this.studentSemester.getSelectionModel().isEmpty()){
-            Student newStudent= new Student(login,name,surname,"",kierunek.getNazwa(),kierunek.getNazwa_wydzialu(),semestr.getNumer(),group);
+            Student newStudent= new Student(login,name,surname,password,kierunek.getNazwa(),kierunek.getNazwa_wydzialu(),semestr.getNumer(),group);
             insertSqlObject(newStudent);
         }
         else {
@@ -814,6 +814,7 @@ public class ControllerAdminMenu extends Controller{
                     connection.commit();
                     return;
                 }
+                
                 int id = -1;
                 Zajecie newZajecie = new Zajecie(id,rocznik,Zajecie.convertDay(dzien),Zajecie.convertHour(godzina),Zajecie.convertWeek(tydzien),typ,numberClasses,grupa,podGrupa,przedmiot.getNazwa(),prowadzacy.getLogin(),sala.getSala(),sala.getBudynek(),prowadzacy,przedmiot);
                 insertSqlObject(newZajecie);
@@ -825,8 +826,12 @@ public class ControllerAdminMenu extends Controller{
                 }
                 showMessage = false;
                 if(id > 0){
+                    int days = 7;
+                    if(Zajecie.convertWeek(tydzien)!=0){
+                        days *= 2;
+                    }
                     for (int i = 0; i < numberClasses; i++) {
-                        ZaplanowaneZajecie newZaplanowaneZajecie = new ZaplanowaneZajecie(Date.valueOf(date.plusDays(7*i)),id,newZajecie);
+                        ZaplanowaneZajecie newZaplanowaneZajecie = new ZaplanowaneZajecie(Date.valueOf(date.plusDays(days*i)),id,newZajecie);
                         insertSqlObject(newZaplanowaneZajecie);
                     }
                     for (int i = 0; i < sala.getLiczba_miejsc(); i++) {

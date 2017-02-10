@@ -200,6 +200,10 @@ public class MySql {
         return instance;
     }
 
+    public static synchronized void clearInstance(){
+        instance = null;
+    }
+
     public void setShowErrors(Boolean showErrors) {
         this.showErrors = showErrors;
     }

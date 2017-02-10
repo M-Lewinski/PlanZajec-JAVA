@@ -47,6 +47,8 @@ public class Prowadzacy extends Uzytkownik {
             PreparedStatement stmt2 = connect.prepareStatement(super.getInsertSQL());
             super.addObjectToBase(stmt2);
             stmt2.executeUpdate();
+            String SQL = "GRANT SELECT,UPDATE ON Obecnosci TO ?@?";
+            this.grantPrivilages(connect,SQL);
         } catch (SQLException e){
             throw e;
         }
@@ -121,6 +123,5 @@ public class Prowadzacy extends Uzytkownik {
             throw e;
         }
     }
-
 
 }

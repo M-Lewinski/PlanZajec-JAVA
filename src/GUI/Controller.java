@@ -2,6 +2,7 @@ package GUI;
 
 import GUI.MessageMenu.Error.ErrorField;
 import dataBase.SqlObject;
+import dataBase.subjects.ZaplanowaneZajecie;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -69,6 +70,12 @@ public class Controller {
 
     public void addChoiceBoxContent(ChoiceBox<SqlObject> choiceBox, List<? extends SqlObject> list){
         ObservableList<SqlObject> obsList = FXCollections.observableArrayList(list);
+//        obsList.add(0,"");
+        choiceBox.setItems(obsList);
+    }
+
+    public void addChoiceBoxContentZajecia(ChoiceBox<ZaplanowaneZajecie> choiceBox, List<ZaplanowaneZajecie> list){
+        ObservableList<ZaplanowaneZajecie> obsList = FXCollections.observableArrayList(list);
 //        obsList.add(0,"");
         choiceBox.setItems(obsList);
     }

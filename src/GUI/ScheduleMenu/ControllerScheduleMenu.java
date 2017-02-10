@@ -2,19 +2,25 @@ package GUI.ScheduleMenu;
 
 import GUI.Controller;
 import GUI.MessageMenu.Error.ErrorField;
+import GUI.MessageMenu.Info.InfoField;
 import GUI.MessageMenu.Warning.WarningField;
 import dataBase.MySql;
 import dataBase.SqlObject;
+import dataBase.actors.Prowadzacy;
 import dataBase.structure.Kierunek;
 import dataBase.structure.Semestr;
 import dataBase.structure.Wydzial;
 import dataBase.subjects.Zajecie;
 import dataBase.subjects.ZaplanowaneZajecie;
+import dataBase.subjects.studentInfo.Miejsce;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,6 +34,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import javax.sql.StatementEventListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,6 +53,29 @@ public class ControllerScheduleMenu extends Controller{
     public double heightSubjectBox = 35.0;
 
     public List<TextArea> groupList = new ArrayList<>();
+
+    public Zajecie currentZajecie;
+    public ZaplanowaneZajecie currentZaplanowaneZajecie;
+    @FXML
+    private Label name;
+    @FXML
+    private Label professor;
+    @FXML
+    private Label time;
+    @FXML
+    private Label week;
+    @FXML
+    private Label group;
+    @FXML
+    private Label room;
+    @FXML
+    private Label spots;
+    @FXML
+    private ChoiceBox<ZaplanowaneZajecie> zajecieChoiceBox;
+
+    @FXML
+    private TableView<Miejsce> miejscaTableView;
+
     @FXML
     private AnchorPane mainPane;
     @FXML
@@ -97,11 +127,30 @@ public class ControllerScheduleMenu extends Controller{
     @FXML
     private ChoiceBox<String> year;
 
+    @FXML
+    private Button absentButton;
+    @FXML
+    private Button unknownButton;
+    @FXML
+    private Button presentButton;
+    @FXML
+    private Button takeSpotButton;
+    @FXML
+    private Button leaveSpotButton;
 //    private StackPane testPane;
     public ControllerScheduleMenu(){
     }
     @FXML
     public void initialize(){
+        if(MySql.getInstance().getStudent()==null){
+            this.takeSpotButton.setVisible(false);
+            this.leaveSpotButton.setVisible(false);
+        }
+        if(MySql.getInstance().getProwadzacy()==null){
+            this.absentButton.setVisible(false);
+            this.unknownButton.setVisible(false);
+            this.presentButton.setVisible(false);
+        }
         this.schedule.getChildren().add(this.subjectBoxes);
         this.setZooming();
         this.setDragging();
@@ -128,6 +177,19 @@ public class ControllerScheduleMenu extends Controller{
         this.addChoiceBoxContentString(this.year,years);
         this.addListenerChoiceBox(this.faculty,this.course);
         this.addListenerChoiceBox(this.course,this.semestr);
+
+        this.addChoiceBoxContentZajecia(this.zajecieChoiceBox,this.zaplanowaneZajecieList);
+        this.zajecieChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != oldValue && newValue != null){
+                this.currentZaplanowaneZajecie = (ZaplanowaneZajecie) this.zajecieChoiceBox.getSelectionModel().getSelectedItem();
+                this.miejscaTableView.refresh();
+            }
+        });
+        TableColumn<Miejsce,String> student = new TableColumn("Student");
+        TableColumn<Miejsce,String> obecnosc= new TableColumn("Attendance");
+        obecnosc.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getAttendance(this.currentZaplanowaneZajecie)));
+        student.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getStudentName()));
+        this.miejscaTableView.getColumns().addAll(student,obecnosc);
 
     }
 
@@ -322,9 +384,9 @@ public class ControllerScheduleMenu extends Controller{
                 x += this.widthSubjectBox/2.0;
             }
         }
-        double y = this.heightSubjectBox;
+        double y = this.heightSubjectBox*zajecie.getGodzina();
         int dzien = zajecie.getDzien();
-        y += 9*dzien;
+        y += this.heightSubjectBox*9*dzien;
         SubjecBox subjectBox = new SubjecBox(this.fontSize,x,y,width,height,zajecie);
         Rectangle rectangle = new Rectangle(x,y,width,height);
         rectangle.setFill(zajecie.getSubject().getColor());
@@ -333,12 +395,18 @@ public class ControllerScheduleMenu extends Controller{
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if(newValue){
-                    if(subjectBox.getZaplanowaneZajecie()!=null){
-                        chosenClass(subjectBox.getZaplanowaneZajecie());
-                    }
-                    else if (subjectBox.getZajecie()!=null){
+                    if (subjectBox.getZajecie()!=null){
                         chosenClass(subjectBox.getZajecie());
+                        currentZajecie = subjectBox.getZajecie();
+                        currentZaplanowaneZajecie = null;
+                        miejscaTableView.setItems(null);
+                        miejscaTableView.refresh();
                     }
+
+                    currentZajecie.findSpots();
+                    spots.setText(Integer.toString(currentZajecie.getMiejsca().size()));
+                    ObservableList<Miejsce> data = FXCollections.observableArrayList(currentZajecie.getMiejsca());
+                    miejscaTableView.setItems(data);
                 }
             }
         });
@@ -411,10 +479,193 @@ public class ControllerScheduleMenu extends Controller{
 
     }
     public void chosenClass(Zajecie zajecie){
-
+        this.name.setText(zajecie.getPrzedmiot());
+        this.professor.setText(zajecie.getProfessor().toString());
+        this.time.setText(Zajecie.convertDay(zajecie.getDzien())+ " " + Zajecie.convertHour(zajecie.getGodzina()));
+        this.week.setText(Zajecie.convertWeek(zajecie.getTydzien()));
+        this.group.setText("Group: " + Integer.toString(zajecie.getGrupa()) + " subgroup: " + Integer.toString(zajecie.getPodgrupa()));
+        this.room.setText(zajecie.getSala() + " " + zajecie.getBudynek());
+        try {
+            if(!this.zaplanowaneZajecieList.isEmpty()){
+                for (ZaplanowaneZajecie z:
+                     zaplanowaneZajecieList) {
+                    z.delete();
+                }
+            }
+            this.zaplanowaneZajecieList.clear();
+            zaplanowaneZajecieList = ZaplanowaneZajecie.getAllObjects(zajecie);
+            this.addChoiceBoxContentZajecia(this.zajecieChoiceBox,this.zaplanowaneZajecieList);
+        }
+        catch (SQLException e){
+            ErrorField.error("Failure while loading class");
+            e.printStackTrace();
+        }
     }
 
-    public void chosenClass(ZaplanowaneZajecie zajecie){
+    public void takeNewSpot(){
+        takeFreeSpot();
+    }
 
+    private void takeFreeSpot() {
+        if(this.currentZajecie==null){
+            ErrorField.error("Please choose class first");
+            return;
+        }
+        Connection connection = MySql.getInstance().getConnect();
+        try {
+            String SQL = "SELECT COUNT(*) FROM Miejsca WHERE student IS NULL AND Miejsca.id_zajecia = ? FOR UPDATE";
+            PreparedStatement stmt = connection.prepareStatement(SQL);
+            stmt.setInt(1,this.currentZajecie.getId());
+            ResultSet rs = stmt.executeQuery();
+            int test = -1;
+            if(rs.next()){
+                test = rs.getInt(1);
+            }
+            if(test < 1){
+                ErrorField.error("There are no empty spots");
+                connection.rollback();
+                return;
+            }
+            test = 1;
+            SQL = "SELECT COUNT(*) FROM Miejsca WHERE id_zajecia = ? AND student = (SELECT userName())";
+            stmt = connection.prepareStatement(SQL);
+            stmt.setInt(1,this.currentZajecie.getId());
+            rs = stmt.executeQuery();
+            if(rs.next()){
+                test = rs.getInt(1);
+            }
+            if(test > 0){
+                ErrorField.error("You already have spot in this class");
+                connection.rollback();
+                return;
+            }
+            SQL = "SELECT takeSpot(?)";
+            stmt = connection.prepareStatement(SQL);
+            stmt.setInt(1,this.currentZajecie.getId());
+            rs = stmt.executeQuery();
+            boolean check = false;
+            if(rs.next()){
+                check = rs.getBoolean(1);
+            }
+            if(check){
+                connection.commit();
+                InfoField.info("Getting spot was successful");
+            }
+            else {
+                ErrorField.error("You are not a student!");
+                connection.rollback();
+            }
+
+        }
+        catch (SQLException e){
+            ErrorField.error("Failure while getting spot");
+            e.printStackTrace();
+            try {
+                connection.rollback();
+            }
+            catch (SQLException err){
+                err.printStackTrace();
+            }
+        }
+    }
+
+    public void leaveNewSpot(){
+        if(this.currentZajecie==null){
+            ErrorField.error("Please choose class first");
+            return;
+        }
+        Connection connection = MySql.getInstance().getConnect();
+        try {
+            String SQL = "SELECT  COUNT(*) FROM Miejsca WHERE id_zajecia = ? FOR UPDATE ";
+            PreparedStatement stmt = connection.prepareStatement(SQL);
+            stmt.setInt(1,this.currentZajecie.getId());
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                if(rs.getInt(1)==0){
+                    ErrorField.error("You do not have spot in this class");
+                    connection.rollback();
+                    return;
+                }
+            }
+            SQL = "SELECT leaveSpot(?)";
+            stmt = connection.prepareStatement(SQL);
+            stmt.setInt(1,this.currentZajecie.getId());
+            rs = stmt.executeQuery();
+            boolean check = false;
+            if(rs.next()){
+                check = rs.getBoolean(1);
+            }
+            if(check){
+                connection.commit();
+                InfoField.info("Leaving spot was successful");
+            }
+            else {
+                connection.rollback();
+                ErrorField.error("You do not have spot in this class");
+            }
+        }
+        catch (SQLException e){
+            ErrorField.error("Failure while leaving spot");
+            try {
+                connection.rollback();
+            }
+            catch (SQLException err){
+                err.printStackTrace();
+            }
+            e.printStackTrace();
+
+        }
+    }
+
+    public void presentAttendance(){
+        this.changeAttendance("Present");
+    }
+
+    public void unknownAttendance(){
+        this.changeAttendance("Unknown");
+    }
+    public void absentAttendance(){
+        this.changeAttendance("Absent");
+    }
+
+    public void changeAttendance(String type){
+        if(this.currentZaplanowaneZajecie!=null && this.currentZajecie !=null){
+            Connection connection = MySql.getInstance().getConnect();
+            try {
+                String SQL = "SELECT * FROM Obecnosci WHERE id_zajecia = ? AND data = ? FOR UPDATE";
+                PreparedStatement stmt = connection.prepareStatement(SQL);
+                stmt.setInt(1,this.currentZajecie.getId());
+                stmt.setDate(2,this.currentZaplanowaneZajecie.getData());
+                stmt.execute();
+                SQL = "UPDATE Obecnosci SET typ = ? WHERE id_zajecia = ? AND data = ?";
+                stmt = connection.prepareStatement(SQL);
+                stmt.setString(1,type);
+                stmt.setInt(2,this.currentZajecie.getId());
+                stmt.setDate(3,this.currentZaplanowaneZajecie.getData());
+
+                stmt.execute();
+                connection.commit();
+
+                System.out.println("Attendance");
+            }
+            catch (SQLException e){
+                try {
+                    connection.rollback();
+                }
+                catch (SQLException err){
+                    err.printStackTrace();
+                }
+                ErrorField.error("Failure while changing attendance");
+                e.printStackTrace();
+
+            }
+        }
+        else{
+            WarningField.warning("Please first choose specific date");
+        }
+        currentZajecie.findSpots();
+        ObservableList<Miejsce> data = FXCollections.observableArrayList(currentZajecie.getMiejsca());
+        miejscaTableView.setItems(data);
+        miejscaTableView.refresh();
     }
 }

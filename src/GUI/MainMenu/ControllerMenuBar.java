@@ -53,6 +53,11 @@ public class ControllerMenuBar extends Controller {
 
     public void goToLoginMenu(){
         try {
+            Main.getRefresher().setThreadIsAlive(false);
+            Main.getRefresher().getThread().join();
+            MySql.setUser(null,null);
+            MySql.getInstance().getConnect().close();
+            MySql.clearInstance();
             Main.changeScene("Login Menu", "LoginMenu/LoginMenu.fxml");
         }catch (Exception e){
             e.printStackTrace();

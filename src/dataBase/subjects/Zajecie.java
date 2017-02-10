@@ -5,6 +5,7 @@ import dataBase.MySql;
 import dataBase.SqlObject;
 import dataBase.actors.Prowadzacy;
 import dataBase.generator.SqlClassGenerator;
+import dataBase.subjects.studentInfo.Miejsce;
 import javafx.scene.paint.Color;
 
 import java.sql.*;
@@ -28,7 +29,7 @@ public class Zajecie extends SqlObject {
 
     private Prowadzacy professor;
     private Przedmiot subject;
-
+    public  List<Miejsce> miejsca = new ArrayList<>();
     public Zajecie(int id, String rocznik, int dzien, int godzina, int tydzien, String rodzaj, int liczba_godzin, int grupa, int podgrupa, String przedmiot, String login_prowadzacego, String sala, String budynek,Prowadzacy professor, Przedmiot subject) {
         this.id = id;
         this.rocznik = rocznik;
@@ -381,5 +382,38 @@ public class Zajecie extends SqlObject {
     public void delete(){
         this.professor = null;
         this.subject = null;
+        if(miejsca!=null){
+
+            for (Miejsce m:
+                    miejsca) {
+                m.delete();
+            }
+            miejsca.clear();
+        }
+    }
+
+    public List<Miejsce> getMiejsca() {
+        return miejsca;
+    }
+
+    public void setMiejsca(List<Miejsce> miejsca) {
+        this.miejsca = miejsca;
+    }
+
+    public void findSpots(){
+        if(!this.miejsca.isEmpty()){
+            for (Miejsce m:
+                 this.miejsca) {
+                m.delete();
+            }
+            this.miejsca.clear();
+        }
+        try {
+            this.miejsca.addAll(Miejsce.getAllObjects());
+        }
+        catch (SQLException e){
+            ErrorField.error("Failure while looking for spots");
+            e.printStackTrace();
+        }
     }
 }

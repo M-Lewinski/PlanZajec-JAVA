@@ -9,6 +9,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
@@ -20,6 +21,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.ScheduleMenu.ControllerScheduleMenu">
    <center>
@@ -166,24 +168,111 @@
                       </Tab>
                       <Tab text="Subject">
                         <content>
-                          <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: RED;">
+                          <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
                                  <children>
-                                    <GridPane layoutX="125.0" layoutY="45.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
-                                      <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="61.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="395.0" />
-                                      </columnConstraints>
-                                      <rowConstraints>
-                                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                      </rowConstraints>
+                                    <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="100.0" />
+                                    <BorderPane layoutX="292.0" layoutY="137.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="230.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <center>
+                                          <AnchorPane>
+                                             <children>
+                                                <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="567.0" prefWidth="295.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <content>
+                                                      <TableView fx:id="miejscaTableView" prefHeight="200.0" prefWidth="200.0" />
+                                                   </content>
+                                                </ScrollPane>
+                                             </children>
+                                          </AnchorPane>
+                                       </center>
+                                       <top>
+                                          <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: #373a3c;" BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Button fx:id="absentButton" layoutX="14.0" layoutY="5.0" mnemonicParsing="false" onAction="#absentAttendance" prefHeight="26.0" prefWidth="72.0" style="-fx-background-color: d9534f;" text="Absent" textFill="WHITE" />
+                                                <Button fx:id="unknownButton" layoutX="97.0" layoutY="5.0" mnemonicParsing="false" onAction="#unknownAttendance" prefHeight="26.0" prefWidth="94.0" style="-fx-background-color: f0ad4e;" text="Unknown" textFill="WHITE" />
+                                                <Button fx:id="presentButton" layoutX="202.0" layoutY="5.0" mnemonicParsing="false" onAction="#presentAttendance" prefHeight="26.0" prefWidth="94.0" style="-fx-background-color: #5cb85c;" text="Present" textFill="WHITE" />
+                                             </children>
+                                          </AnchorPane>
+                                       </top>
+                                    </BorderPane>
+                                    <AnchorPane layoutY="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
                                        <children>
-                                          <Label text="Subject" />
-                                          <Label text="Type" GridPane.rowIndex="1" />
-                                          <Label text="test" GridPane.columnIndex="1" />
+                                          <GridPane prefHeight="584.0" prefWidth="233.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Label text="Subject:">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font></Label>
+                                                <Label fx:id="name" text="name" GridPane.rowIndex="1" />
+                                                <Label fx:id="professor" text="Name and surname" GridPane.rowIndex="3" />
+                                                <Label fx:id="time" text="time" GridPane.rowIndex="5" />
+                                                <Label text="Professor:" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Day and hours:" GridPane.rowIndex="4">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Week:" GridPane.rowIndex="6">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Group and subgroup:" GridPane.rowIndex="8">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Room:" GridPane.rowIndex="10">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Classes:" GridPane.rowIndex="14">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <ChoiceBox fx:id="zajecieChoiceBox" prefHeight="26.0" prefWidth="187.0" GridPane.rowIndex="15" />
+                                                <Label fx:id="week" text="week" GridPane.rowIndex="7" />
+                                                <Label fx:id="group" text="group" GridPane.rowIndex="9" />
+                                                <Label fx:id="room" text="room" GridPane.rowIndex="11" />
+                                                <Label text="Spots:" GridPane.rowIndex="12">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="spots" text="spots" GridPane.rowIndex="13" />
+                                                <Button fx:id="leaveSpotButton" mnemonicParsing="false" onAction="#leaveNewSpot" prefHeight="26.0" prefWidth="131.0" style="-fx-background-color: d9534f;" text="Leave spot" textFill="WHITE" GridPane.rowIndex="17" />
+                                                <Button fx:id="takeSpotButton" mnemonicParsing="false" onAction="#takeNewSpot" prefHeight="26.0" prefWidth="131.0" style="-fx-background-color: #5cb85c;" text="Take spot" textFill="WHITE" GridPane.rowIndex="16" />
+                                             </children>
+                                          </GridPane>
                                        </children>
-                                    </GridPane>
+                                    </AnchorPane>
                                  </children>
                               </AnchorPane>
                         </content>

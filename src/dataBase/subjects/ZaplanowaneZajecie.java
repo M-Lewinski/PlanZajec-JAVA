@@ -1,12 +1,12 @@
 package dataBase.subjects;
 
 import GUI.MessageMenu.Error.ErrorField;
+import dataBase.MySql;
 import dataBase.SqlObject;
 import dataBase.generator.SqlClassGenerator;
+import javafx.scene.paint.Color;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,5 +89,41 @@ public class ZaplanowaneZajecie extends SqlObject {
 
     public void setZajecie(Zajecie zajecie) {
         this.zajecie = zajecie;
+    }
+
+
+    public static List<ZaplanowaneZajecie> getAllObjects(Zajecie zajecie) throws SQLException {
+        List<ZaplanowaneZajecie> list = new ArrayList<ZaplanowaneZajecie>();
+        String SQL = "SELECT * FROM Zaplanowane_zajecia zz JOIN Zajecia z JOIN UzytkownicyView u  JOIN Przedmioty p WHERE zz.id_zajecia = ? AND zz.id_zajecia = z.id AND z.login_prowadzacego = u.login AND z.przedmiot = p.nazwa ORDER BY zz.data ASC";
+        Connection connect = MySql.getInstance().getConnect();
+        try {
+            PreparedStatement stmt = connect.prepareStatement(SQL);
+            stmt.setInt(1,zajecie.getId());
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                list.add(ZaplanowaneZajecie.setValuesFromRS(rs));
+            }
+        } catch (SQLException e){
+            throw e;
+        }
+        return list;
+    }
+
+
+    public static ZaplanowaneZajecie setValuesFromRS(ResultSet rs) throws SQLException {
+        try {
+            Date date = rs.getDate(1);
+            int id_zajecia = rs.getInt(2);
+            Zajecie zajecie = Zajecie.setValuesFromRS(rs,2);
+            ZaplanowaneZajecie newZaplanowaneZajecie = new ZaplanowaneZajecie(date,id_zajecia,zajecie);
+            return newZaplanowaneZajecie;
+        } catch (SQLException e){
+            throw e;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.data.toString();
     }
 }
