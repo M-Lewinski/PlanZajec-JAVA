@@ -245,20 +245,20 @@ public class ControllerScheduleMenu extends Controller{
                     double deltaX = previousX - event.getX();
                     if(Math.abs(deltaX) > 20){
                         if(deltaX > 0){
-                            scroll.setHvalue(scroll.getHvalue() + 0.03);
+                            scroll.setHvalue(scroll.getHvalue() + 0.01);
                         }
                         else if(deltaX < 0){
-                            scroll.setHvalue(scroll.getHvalue() - 0.03);
+                            scroll.setHvalue(scroll.getHvalue() - 0.01);
                         }
                     }
 
                     double deltaY = previousY - event.getY();
                     if(Math.abs(deltaY) > 20){
                         if(deltaY>0){
-                            scroll.setVvalue(scroll.getVvalue() + 0.03);
+                            scroll.setVvalue(scroll.getVvalue() + 0.01);
                         }
                         else if(deltaY < 0){
-                            scroll.setVvalue(scroll.getVvalue() - 0.03);
+                            scroll.setVvalue(scroll.getVvalue() - 0.01);
                         }
                     }
                 }
@@ -642,6 +642,10 @@ public class ControllerScheduleMenu extends Controller{
 
     public void changeAttendance(String type){
         if(this.currentZaplanowaneZajecie!=null && this.currentZajecie !=null){
+            if(this.miejscaTableView.getSelectionModel().isEmpty()){
+               WarningField.warning("Please choose student");
+                return;
+            }
             Connection connection = MySql.getInstance().getConnect();
             try {
                 String SQL = "SELECT * FROM Obecnosci WHERE id_zajecia = ? AND data = ? FOR UPDATE";
@@ -649,11 +653,17 @@ public class ControllerScheduleMenu extends Controller{
                 stmt.setInt(1,this.currentZajecie.getId());
                 stmt.setDate(2,this.currentZaplanowaneZajecie.getData());
                 stmt.execute();
-                SQL = "UPDATE Obecnosci SET typ = ? WHERE id_zajecia = ? AND data = ?";
+                String student = this.miejscaTableView.getSelectionModel().getSelectedItem().getStudent();
+                if(student == null){
+                    connection.rollback();
+                    return;
+                }
+                SQL = "UPDATE Obecnosci SET typ = ? WHERE id_zajecia = ? AND data = ? AND Obecnosci.student = ?";
                 stmt = connection.prepareStatement(SQL);
                 stmt.setString(1,type);
                 stmt.setInt(2,this.currentZajecie.getId());
                 stmt.setDate(3,this.currentZaplanowaneZajecie.getData());
+                stmt.setString(4,student);
 
                 stmt.execute();
                 connection.commit();
